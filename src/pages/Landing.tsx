@@ -21,7 +21,8 @@ const Landing = () => {
                         <BookOpen size={64} />
                     </div>
                     <h1 className="hero-title">
-                        ரமழான் 2026 (ஹிஜிரி 1447) - குர்ஆன் கேள்வி பதில்
+                        <span className="desktop-only">ரமழான் 2026 (ஹிஜிரி 1447) - குர்ஆன் கேள்வி பதில்</span>
+                        <span className="mobile-only">ரமழான் கேள்வி பதில்</span>
                     </h1>
                     <p className="hero-subtitle">
                         ரமழானின் ஒவ்வொரு நாளும் குர்ஆனுடன் நெருக்கமாகுங்கள்

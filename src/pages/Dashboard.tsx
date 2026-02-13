@@ -32,7 +32,10 @@ const Dashboard = () => {
                     <div className="header-left">
                         <BookOpen size={32} className="header-icon" />
                         <div>
-                            <h1 className="header-title">ரமழான் 2026 (ஹிஜிரி  1447)  - குர்ஆன் கேள்வி பதில் </h1>
+                            <h1 className="header-title">
+                                <span className="desktop-only">ரமழான் 2026 (ஹிஜிரி 1447) - குர்ஆன் கேள்வி பதில்</span>
+                                <span className="mobile-only">ரமழான் கேள்வி பதில்</span>
+                            </h1>
                             <p className="header-subtitle">
                                 வரவேற்கிறோம், {currentUser?.displayName || 'நண்பரே'}!
                             </p>

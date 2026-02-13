@@ -512,8 +512,25 @@ body {
   }
 }
 
+/* Responsive Design Utility Classes */
+.desktop-only {
+  display: inline;
+}
+
+.mobile-only {
+  display: none;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
+  .desktop-only {
+    display: none;
+  }
+
+  .mobile-only {
+    display: inline;
+  }
+
   .hero-title {
     font-size: 2.5rem;
   }
