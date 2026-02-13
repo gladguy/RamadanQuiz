@@ -18,5 +18,5 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
 
-// Initialize Firestore
-export const db = getFirestore(app);
+// Initialize Firestore (using named database 'tamilquiz')
+export const db = getFirestore(app, 'tamilquiz');

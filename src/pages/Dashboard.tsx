@@ -2,6 +2,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { isDayUnlocked } from '../utils/ramadanDates';
 import { Lock, BookOpen, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import Leaderboard from '../components/Leaderboard';
 
 const Dashboard = () => {
     const { currentUser, signOut } = useAuth();
@@ -31,7 +32,7 @@ const Dashboard = () => {
                     <div className="header-left">
                         <BookOpen size={32} className="header-icon" />
                         <div>
-                            <h1 className="header-title">30 நாள் குர்ஆன்</h1>
+                            <h1 className="header-title">ரமழான் 2026 (ஹிஜிரி  1447)  - குர்ஆன் கேள்வி பதில் </h1>
                             <p className="header-subtitle">
                                 வரவேற்கிறோம், {currentUser?.displayName || 'நண்பரே'}!
                             </p>
@@ -44,11 +45,11 @@ const Dashboard = () => {
                 </div>
             </header>
 
+            {/* Leaderboard */}
+            <Leaderboard />
+
             {/* Main Content */}
             <main className="dashboard-main">
-                <div className="bismillah-container">
-                    <h2 className="bismillah-text">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</h2>
-                </div>
                 <div className="days-grid">
                     {days.map((day) => {
                         const unlocked = isDayUnlocked(day);

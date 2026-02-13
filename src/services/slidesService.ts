@@ -31,41 +31,82 @@ import { getMockSlidesForDay29 } from './Day29Slides';
 import { getMockSlidesForDay30 } from './Day30Slides';
 
 /**
+ * Strip quiz/MCQ content from slide text.
+ * The quiz data in DayXSlides is embedded at the end of the last slide's content,
+ * marked by "Quiz \(MCQ\)" or "Quiz \(MCQ\)".
+ * Since quizzes are now served separately via Quiz-X.ts files, we remove
+ * everything from the quiz marker onwards.
+ */
+const stripQuizContent = (slides: Slide[]): Slide[] => {
+    return slides.map((slide, index) => {
+        // Only process the last slide (where quiz content is appended)
+        if (index !== slides.length - 1) return slide;
+
+        const content = slide.content;
+        // Match both quiz marker patterns (escaped parentheses in template literals)
+        const quizMarkers = [
+            'Quiz \\(MCQ\\)',
+            'Quiz (MCQ)',
+            'பயிற்சி வினாக்கள் \\(MCQ\\)',
+            'பயிற்சி வினாக்கள் (MCQ)',
+        ];
+
+        let trimIndex = -1;
+        for (const marker of quizMarkers) {
+            const idx = content.indexOf(marker);
+            if (idx !== -1 && (trimIndex === -1 || idx < trimIndex)) {
+                trimIndex = idx;
+            }
+        }
+
+        if (trimIndex === -1) return slide;
+
+        return {
+            ...slide,
+            content: content.substring(0, trimIndex).trim(),
+        };
+    });
+};
+
+/**
  * Service to fetch slides for a specific day.
  * This can be updated to use dynamic imports or a remote API in the future.
  */
 export const fetchSlidesByDay = (dayNumber: number): Slide[] => {
+    let slides: Slide[];
     switch (dayNumber) {
-        case 1: return getMockSlidesForDay1();
-        case 2: return getMockSlidesForDay2();
-        case 3: return getMockSlidesForDay3();
-        case 4: return getMockSlidesForDay4();
-        case 5: return getMockSlidesForDay5();
-        case 6: return getMockSlidesForDay6();
-        case 7: return getMockSlidesForDay7();
-        case 8: return getMockSlidesForDay8();
-        case 9: return getMockSlidesForDay9();
-        case 10: return getMockSlidesForDay10();
-        case 11: return getMockSlidesForDay11();
-        case 12: return getMockSlidesForDay12();
-        case 13: return getMockSlidesForDay13();
-        case 14: return getMockSlidesForDay14();
-        case 15: return getMockSlidesForDay15();
-        case 16: return getMockSlidesForDay16();
-        case 17: return getMockSlidesForDay17();
-        case 18: return getMockSlidesForDay18();
-        case 19: return getMockSlidesForDay19();
-        case 20: return getMockSlidesForDay20();
-        case 21: return getMockSlidesForDay21();
-        case 22: return getMockSlidesForDay22();
-        case 23: return getMockSlidesForDay23();
-        case 24: return getMockSlidesForDay24();
-        case 25: return getMockSlidesForDay25();
-        case 26: return getMockSlidesForDay26();
-        case 27: return getMockSlidesForDay27();
-        case 28: return getMockSlidesForDay28();
-        case 29: return getMockSlidesForDay29();
-        case 30: return getMockSlidesForDay30();
-        default: return [];
+        case 1: slides = getMockSlidesForDay1(); break;
+        case 2: slides = getMockSlidesForDay2(); break;
+        case 3: slides = getMockSlidesForDay3(); break;
+        case 4: slides = getMockSlidesForDay4(); break;
+        case 5: slides = getMockSlidesForDay5(); break;
+        case 6: slides = getMockSlidesForDay6(); break;
+        case 7: slides = getMockSlidesForDay7(); break;
+        case 8: slides = getMockSlidesForDay8(); break;
+        case 9: slides = getMockSlidesForDay9(); break;
+        case 10: slides = getMockSlidesForDay10(); break;
+        case 11: slides = getMockSlidesForDay11(); break;
+        case 12: slides = getMockSlidesForDay12(); break;
+        case 13: slides = getMockSlidesForDay13(); break;
+        case 14: slides = getMockSlidesForDay14(); break;
+        case 15: slides = getMockSlidesForDay15(); break;
+        case 16: slides = getMockSlidesForDay16(); break;
+        case 17: slides = getMockSlidesForDay17(); break;
+        case 18: slides = getMockSlidesForDay18(); break;
+        case 19: slides = getMockSlidesForDay19(); break;
+        case 20: slides = getMockSlidesForDay20(); break;
+        case 21: slides = getMockSlidesForDay21(); break;
+        case 22: slides = getMockSlidesForDay22(); break;
+        case 23: slides = getMockSlidesForDay23(); break;
+        case 24: slides = getMockSlidesForDay24(); break;
+        case 25: slides = getMockSlidesForDay25(); break;
+        case 26: slides = getMockSlidesForDay26(); break;
+        case 27: slides = getMockSlidesForDay27(); break;
+        case 28: slides = getMockSlidesForDay28(); break;
+        case 29: slides = getMockSlidesForDay29(); break;
+        case 30: slides = getMockSlidesForDay30(); break;
+        default: slides = [];
     }
+    return stripQuizContent(slides);
 };
+

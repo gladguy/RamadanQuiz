@@ -46,7 +46,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     const signInWithGoogle = async () => {
         if (useMockAuth) {
-            // Mock sign-in - just set a fake user
             console.log('🔧 Mock Auth: Signing in with dummy user');
             setCurrentUser(createMockUser() as User);
             localStorage.setItem('mockAuthUser', 'true');
@@ -54,8 +53,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         }
 
         try {
+            // Use signInWithPopup for ALL devices (desktop + mobile)
+            // Modern mobile browsers support popups when triggered by user gesture
+            console.log('🔐 Auth: Signing in with Google popup');
             await signInWithPopup(auth, googleProvider);
-        } catch (error) {
+        } catch (error: unknown) {
+            const firebaseError = error as { code?: string };
+            // Handle popup blocked - common on some mobile browsers
+            if (firebaseError.code === 'auth/popup-blocked' || firebaseError.code === 'auth/popup-closed-by-user') {
+                console.warn('⚠️ Auth: Popup was blocked or closed. Please allow popups for this site.');
+            }
             console.error('Error signing in with Google:', error);
             throw error;
         }
@@ -63,7 +70,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     const signOut = async () => {
         if (useMockAuth) {
-            // Mock sign-out
             console.log('🔧 Mock Auth: Signing out');
             setCurrentUser(null);
             localStorage.removeItem('mockAuthUser');
@@ -80,7 +86,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     useEffect(() => {
         if (useMockAuth) {
-            // Check if user was "logged in" before (persisted in localStorage)
             const wasMockLoggedIn = localStorage.getItem('mockAuthUser') === 'true';
             if (wasMockLoggedIn) {
                 setCurrentUser(createMockUser() as User);
@@ -90,8 +95,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             return;
         }
 
-        // Real Firebase auth
+        // Real Firebase auth - simple and reliable
         const unsubscribe = onAuthStateChanged(auth, (user) => {
+            console.log('👤 Auth state:', user ? user.email : 'Not logged in');
             setCurrentUser(user);
             setLoading(false);
         });

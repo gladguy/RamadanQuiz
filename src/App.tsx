@@ -4,6 +4,8 @@ import { ThemeProvider } from './contexts/ThemeContext';
 import Landing from './pages/Landing';
 import Dashboard from './pages/Dashboard';
 import LearningModule from './components/LearningModule';
+import QuizPage from './components/QuizPage';
+import GlobalBismillah from './components/GlobalBismillah';
 import './index.css';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -61,6 +63,14 @@ function AppRoutes() {
                     </ProtectedRoute>
                 }
             />
+            <Route
+                path="/quiz/:dayNumber"
+                element={
+                    <ProtectedRoute>
+                        <QuizPage />
+                    </ProtectedRoute>
+                }
+            />
         </Routes>
     );
 }
@@ -70,6 +80,7 @@ function App() {
         <ThemeProvider>
             <AuthProvider>
                 <BrowserRouter>
+                    <GlobalBismillah />
                     <AppRoutes />
                 </BrowserRouter>
             </AuthProvider>

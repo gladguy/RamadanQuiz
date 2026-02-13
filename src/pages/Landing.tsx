@@ -21,7 +21,7 @@ const Landing = () => {
                         <BookOpen size={64} />
                     </div>
                     <h1 className="hero-title">
-                        30 நாள் குர்ஆன் பயணம்
+                        ரமழான் 2026 (ஹிஜிரி 1447) - குர்ஆன் கேள்வி பதில்
                     </h1>
                     <p className="hero-subtitle">
                         ரமழானின் ஒவ்வொரு நாளும் குர்ஆனுடன் நெருக்கமாகுங்கள்

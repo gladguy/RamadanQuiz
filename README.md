@@ -1,4 +1,4 @@
-# 30 நாள் குர்ஆன் (30 Days of Quran)
+# 3ரமழான் 2026 (ஹிஜிரி  1447)  - குர்ஆன் கேள்வி பதில் (Ramadan 2026 Hijiri 1447 Quran Quiz)
 
 A React-based web application with Tamil language interface for the "30 Days of Quran" Ramadan program. Features Firebase Authentication with Google Sign-In and date-locked daily challenges.
 
@@ -124,5 +124,6 @@ This project is open source and available for personal and educational use.
 Contributions, issues, and feature requests are welcome!
 
 ---
+npm run build && firebase deploy --only hosting --project tamilquranquiz
 
 Made with ❤️ for the Ramadan community

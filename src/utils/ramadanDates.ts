@@ -1,6 +1,9 @@
-// Ramadan 2026 - Adjusted for testing (Day 1 unlocked)
-const RAMADAN_START_DATE = new Date('2026-02-12');
+// Ramadan 2026 - Adjusted to start TODAY (Feb 13)
+const RAMADAN_START_DATE = new Date('2026-02-13');
 const RAMADAN_DAYS = 30;
+
+// Toggle: set to true to unlock all 30 days, false to release days per Ramadan calendar
+export const UNLOCK_ALL_DAYS = true;
 
 export const getRamadanDay = (): number => {
     const today = new Date();
@@ -22,9 +25,11 @@ export const getRamadanDay = (): number => {
     return Math.min(diffDays + 1, RAMADAN_DAYS);
 };
 
-export const isDayUnlocked = (_dayNumber: number): boolean => {
-    // Return true for all days as requested to enable 30-day view
-    return true;
+export const isDayUnlocked = (dayNumber: number): boolean => {
+    if (UNLOCK_ALL_DAYS) return true;
+    const currentDay = getRamadanDay();
+    // A day is unlocked if it's the current day or a past day
+    return dayNumber <= currentDay;
 };
 
 export const getRamadanInfo = () => {
