@@ -1,0 +1,19 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/tamilquiz/documents {
+    // Current requirement: Authenticated users can read all results for the leaderboard.
+    // They can only write their own results (identified by userEmail).
+    
+    match /quizResults/{resultId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null && request.resource.data.userEmail == request.auth.token.email;
+      allow update, delete: if false; // Prevention of score tampering
+    }
+    
+    // Default: Deny everything else
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

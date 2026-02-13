@@ -31,6 +31,74 @@ import { getMockQuizForDay29 } from './Quiz/Quiz-29';
 import { getMockQuizForDay30 } from './Quiz/Quiz-30';
 
 /**
+ * Explicit answer key for all 30 days (Juz 1–30).
+ * Each day maps question number (1–5) to the correct option label (A/B/C/D).
+ * Answers determined by careful analysis of the slide content in each Quiz file.
+ */
+const QUIZ_ANSWER_KEY: Record<number, Record<number, string>> = {
+    // Day 1 – Juz 1: Al-Fatiha & Al-Baqarah
+    1: { 1: 'B', 2: 'C', 3: 'B', 4: 'B', 5: 'B' },
+    // Day 2 – Juz 2: Al-Baqarah (cont.)
+    2: { 1: 'B', 2: 'C', 3: 'C', 4: 'B', 5: 'C' },
+    // Day 3 – Juz 3: Al-Baqarah & Aal-Imran
+    3: { 1: 'B', 2: 'D', 3: 'B', 4: 'C', 5: 'B' },
+    // Day 4 – Juz 4: Aal-Imran & An-Nisa
+    4: { 1: 'C', 2: 'C', 3: 'A', 4: 'B', 5: 'C' },
+    // Day 5 – Juz 5: An-Nisa & Al-Ma'idah
+    5: { 1: 'C', 2: 'C', 3: 'B', 4: 'C', 5: 'B' },
+    // Day 6 – Juz 6: An-Nisa & Al-Ma'idah (cont.)
+    6: { 1: 'B', 2: 'B', 3: 'C', 4: 'B', 5: 'B' },
+    // Day 7 – Juz 7: Al-Ma'idah & Al-An'am
+    7: { 1: 'B', 2: 'B', 3: 'B', 4: 'C', 5: 'A' },
+    // Day 8 – Juz 8: Al-An'am & Al-A'raf
+    8: { 1: 'C', 2: 'B', 3: 'C', 4: 'C', 5: 'A' },
+    // Day 9 – Juz 9: Al-A'raf & Al-Anfal
+    9: { 1: 'C', 2: 'B', 3: 'B', 4: 'B', 5: 'C' },
+    // Day 10 – Juz 10: Al-Anfal & At-Tawbah
+    10: { 1: 'B', 2: 'B', 3: 'B', 4: 'B', 5: 'B' },
+    // Day 11 – Juz 11: At-Tawbah & Hud
+    11: { 1: 'B', 2: 'B', 3: 'B', 4: 'B', 5: 'B' },
+    // Day 12 – Juz 12: Hud & Yusuf
+    12: { 1: 'C', 2: 'B', 3: 'B', 4: 'D', 5: 'C' },
+    // Day 13 – Juz 13: Yusuf, Ar-Ra'd & Ibrahim
+    13: { 1: 'C', 2: 'B', 3: 'C', 4: 'C', 5: 'B' },
+    // Day 14 – Juz 14: Al-Hijr & An-Nahl
+    14: { 1: 'C', 2: 'B', 3: 'B', 4: 'B', 5: 'B' },
+    // Day 15 – Juz 15: Al-Isra & Al-Kahf
+    15: { 1: 'B', 2: 'B', 3: 'C', 4: 'B', 5: 'B' },
+    // Day 16 – Juz 16: Al-Kahf, Maryam & Taha
+    16: { 1: 'B', 2: 'C', 3: 'B', 4: 'B', 5: 'C' },
+    // Day 17 – Juz 17: Al-Anbiya & Al-Hajj
+    17: { 1: 'C', 2: 'B', 3: 'A', 4: 'C', 5: 'C' },
+    // Day 18 – Juz 18: Al-Mu'minun, An-Nur & Al-Furqan
+    18: { 1: 'B', 2: 'B', 3: 'B', 4: 'D', 5: 'B' },
+    // Day 19 – Juz 19: Al-Furqan, Ash-Shu'ara & An-Naml
+    19: { 1: 'B', 2: 'B', 3: 'C', 4: 'B', 5: 'C' },
+    // Day 20 – Juz 20: An-Naml, Al-Qasas & Al-Ankabut
+    20: { 1: 'C', 2: 'C', 3: 'B', 4: 'B', 5: 'C' },
+    // Day 21 – Juz 21: Al-Ankabut, Ar-Rum, Luqman, As-Sajdah & Al-Ahzab
+    21: { 1: 'B', 2: 'C', 3: 'D', 4: 'B', 5: 'C' },
+    // Day 22 – Juz 22: Al-Ahzab, Saba, Fatir & Ya-Sin
+    22: { 1: 'C', 2: 'C', 3: 'B', 4: 'B', 5: 'C' },
+    // Day 23 – Juz 23: Ya-Sin, As-Saffat, Sad & Az-Zumar
+    23: { 1: 'B', 2: 'C', 3: 'C', 4: 'B', 5: 'B' },
+    // Day 24 – Juz 24: Az-Zumar, Ghafir & Fussilat
+    24: { 1: 'B', 2: 'B', 3: 'B', 4: 'A', 5: 'C' },
+    // Day 25 – Juz 25: Fussilat, Ash-Shura, Az-Zukhruf, Ad-Dukhan & Al-Jathiyah
+    25: { 1: 'C', 2: 'B', 3: 'B', 4: 'C', 5: 'B' },
+    // Day 26 – Juz 26: Al-Ahqaf, Muhammad, Al-Fath, Al-Hujurat & Qaf
+    26: { 1: 'C', 2: 'B', 3: 'C', 4: 'C', 5: 'B' },
+    // Day 27 – Juz 27: Adh-Dhariyat, At-Tur, An-Najm, Al-Qamar, Ar-Rahman, Al-Waqi'ah & Al-Hadid
+    27: { 1: 'C', 2: 'B', 3: 'B', 4: 'C', 5: 'C' },
+    // Day 28 – Juz 28: Al-Mujadila to At-Tahrim
+    28: { 1: 'C', 2: 'B', 3: 'C', 4: 'C', 5: 'B' },
+    // Day 29 – Juz 29: Al-Mulk to Al-Mursalat
+    29: { 1: 'B', 2: 'C', 3: 'C', 4: 'B', 5: 'B' },
+    // Day 30 – Juz 30 (Juz Amma): An-Naba to An-Nas
+    30: { 1: 'B', 2: 'B', 3: 'C', 4: 'B', 5: 'B' },
+};
+
+/**
  * Fetch raw quiz content for a specific day
  */
 const fetchRawQuizContent = (dayNumber: number): string => {
@@ -76,9 +144,10 @@ const fetchRawQuizContent = (dayNumber: number): string => {
 
 /**
  * Parse raw quiz content string into structured Question objects.
- * The content contains questions like:
- *   "1. Question text? A) opt1 B) opt2  C) opt3 D) opt4"
- * Questions are separated by newlines. Correct answer has trailing double-space.
+ * Supports TWO formats:
+ *   1) Single-line: "1. Question? A) opt1 B) opt2  C) opt3 D) opt4"
+ *   2) Multi-line:  "1. Question?\nA) opt1\nB) opt2\nC) opt3\nD) opt4"
+ * Correct answer is detected via trailing double-space or  marker.
  */
 export const parseQuizContent = (rawContent: string): Question[] => {
     const questions: Question[] = [];
@@ -89,60 +158,88 @@ export const parseQuizContent = (rawContent: string): Question[] => {
     // Split content into individual lines using real newlines
     const lines = content.split('\n');
 
-    for (const line of lines) {
-        const trimmed = line.trim();
-        if (!trimmed) continue;
+    let i = 0;
+    while (i < lines.length) {
+        const trimmed = lines[i].trim();
+        if (!trimmed) { i++; continue; }
 
         // Match question pattern: starts with "N. " where N is a number
         const questionMatch = trimmed.match(/^(\d+)\.\s+(.*)/);
-        if (!questionMatch) continue;
+        if (!questionMatch) { i++; continue; }
 
         const questionNum = parseInt(questionMatch[1]);
         const restOfLine = questionMatch[2];
 
-        // Find where the first option starts (A) B) C) or D))
+        // Check if options are on the SAME line
         const firstOptionIdx = restOfLine.search(/\b[A-D]\)/);
-        if (firstOptionIdx < 0) continue; // No options found, skip this line
+        if (firstOptionIdx >= 0) {
+            // SAME-LINE FORMAT: "1. Question? A) opt1 B) opt2 C) opt3 D) opt4"
+            const questionText = restOfLine.substring(0, firstOptionIdx).trim();
+            const optionsPart = restOfLine.substring(firstOptionIdx);
 
-        const questionText = restOfLine.substring(0, firstOptionIdx).trim();
-        const optionsPart = restOfLine.substring(firstOptionIdx);
+            const optionEntries: { label: string; text: string }[] = [];
+            const optionRegex = /([A-D])\)\s*(.*?)(?=\s+[A-D]\)|$)/g;
+            let match;
+            while ((match = optionRegex.exec(optionsPart)) !== null) {
+                optionEntries.push({ label: match[1], text: match[2].trim() });
+            }
 
-        // Extract each option: A) text B) text C) text D) text
-        // Use a pattern that captures the label and text up to the next option or end
-        const optionEntries: { label: string; text: string; raw: string }[] = [];
-        const optionRegex = /([A-D])\)\s*(.*?)(?=\s+[A-D]\)|$)/g;
-        let match;
+            if (optionEntries.length >= 2) {
+                // Detect correct answer: option followed by double-space
+                let correctLabel = '';
+                const correctRegex = /([A-D])\)\s*(.*?)\s{2,}(?=[A-D]\)|$)/g;
+                let correctMatch;
+                while ((correctMatch = correctRegex.exec(optionsPart)) !== null) {
+                    correctLabel = correctMatch[1];
+                }
+                if (!correctLabel) correctLabel = optionEntries[0].label;
 
-        while ((match = optionRegex.exec(optionsPart)) !== null) {
-            optionEntries.push({
-                label: match[1],
-                text: match[2].trim(),
-                raw: match[2], // Keep raw for correct-answer detection
-            });
+                questions.push({
+                    id: questionNum,
+                    questionText,
+                    options: optionEntries.map(o => ({ label: o.label, text: o.text })),
+                    correctAnswer: correctLabel,
+                });
+            }
+            i++;
+        } else {
+            // MULTI-LINE FORMAT: question on one line, options on following lines
+            const questionText = restOfLine.trim();
+            const optionEntries: { label: string; text: string }[] = [];
+            let correctLabel = '';
+            i++;
+
+            // Collect option lines (A), B), C), D))
+            while (i < lines.length) {
+                const optLine = lines[i].trim();
+                const optMatch = optLine.match(/^([A-D])\)\s*(.*)/);
+                if (optMatch) {
+                    const label = optMatch[1];
+                    const text = optMatch[2].trim();
+                    // Check for trailing double-space (correct answer marker)
+                    if (optMatch[2].match(/\s{2,}$/)) {
+                        correctLabel = label;
+                    }
+                    optionEntries.push({ label, text });
+                    i++;
+                } else if (optLine.startsWith('+') || optLine === '') {
+                    // Skip  markers and empty lines between options
+                    i++;
+                } else {
+                    break; // Not an option line, stop collecting
+                }
+            }
+
+            if (optionEntries.length >= 2) {
+                if (!correctLabel) correctLabel = optionEntries[0].label;
+                questions.push({
+                    id: questionNum,
+                    questionText,
+                    options: optionEntries.map(o => ({ label: o.label, text: o.text })),
+                    correctAnswer: correctLabel,
+                });
+            }
         }
-
-        if (optionEntries.length < 2) continue; // Need at least 2 options
-
-        // Detect correct answer: the option followed by double-space in raw content
-        // Pattern: "correct answer text  " (trailing 2+ spaces before next option)
-        let correctLabel = '';
-        const correctRegex = /([A-D])\)\s*(.*?)\s{2,}(?=[A-D]\)|$)/g;
-        let correctMatch;
-        while ((correctMatch = correctRegex.exec(optionsPart)) !== null) {
-            correctLabel = correctMatch[1];
-        }
-
-        // Fallback: if no correct answer detected, default to B (common in the data)
-        if (!correctLabel) {
-            correctLabel = optionEntries[0].label;
-        }
-
-        questions.push({
-            id: questionNum,
-            questionText,
-            options: optionEntries.map(o => ({ label: o.label, text: o.text })),
-            correctAnswer: correctLabel,
-        });
     }
 
     return questions;
@@ -196,13 +293,24 @@ const shuffleQuestionOptions = (questions: Question[]): Question[] => {
 
 /**
  * Fetch and parse quiz for a specific day.
- * Options are shuffled randomly each time so the correct answer
- * appears in a different position on every attempt.
+ * Applies the explicit QUIZ_ANSWER_KEY to set correct answers reliably,
+ * then shuffles options randomly so the correct answer appears in a
+ * different position on every attempt.
  */
 export const fetchQuizByDay = (dayNumber: number): Question[] => {
     const rawContent = fetchRawQuizContent(dayNumber);
     if (!rawContent) return [];
     const questions = parseQuizContent(rawContent);
+
+    // Apply explicit answer key (overrides unreliable double-space detection)
+    const answerKey = QUIZ_ANSWER_KEY[dayNumber];
+    if (answerKey) {
+        questions.forEach(q => {
+            if (answerKey[q.id]) {
+                q.correctAnswer = answerKey[q.id];
+            }
+        });
+    }
+
     return shuffleQuestionOptions(questions);
 };
-
