@@ -4,7 +4,8 @@ import { fetchQuizByDay } from '../services/quizService';
 import { saveQuizResult, getUserQuizAttempt, QuizResultRecord } from '../services/quizResultsService';
 import { useAuth } from '../contexts/AuthContext';
 import { Question } from '../types/quiz';
-import { ChevronLeft, ChevronRight, Trophy, Home, CheckCircle, XCircle } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Trophy, Home, CheckCircle, XCircle, Search, X } from 'lucide-react';
+import { QUIZ_EVIDENCE } from '../services/Quiz/Evidence';
 
 const QuizPage = () => {
     const { dayNumber } = useParams<{ dayNumber: string }>();
@@ -21,6 +22,7 @@ const QuizPage = () => {
     const [saving, setSaving] = useState(false);
     const [saved, setSaved] = useState(false);
     const [previousResult, setPreviousResult] = useState<QuizResultRecord | null>(null);
+    const [showEvidence, setShowEvidence] = useState(false);
 
     useEffect(() => {
         if (!dayNumber) return;
@@ -177,6 +179,10 @@ const QuizPage = () => {
                     <p className="results-save-status">📅 {attemptDate}</p>
 
                     <div className="results-actions">
+                        <button onClick={() => setShowEvidence(true)} className="results-btn verify-btn">
+                            <Search size={20} />
+                            <span>சரி பார்க்க (Verify)</span>
+                        </button>
                         <button onClick={() => navigate('/dashboard')} className="results-btn home-btn">
                             <Home size={20} />
                             <span>முகப்புக்கு செல்</span>
@@ -230,12 +236,44 @@ const QuizPage = () => {
                     {saved && <p className="results-save-status saved">✅ மதிப்பெண் சேமிக்கப்பட்டது!</p>}
 
                     <div className="results-actions">
+                        <button onClick={() => setShowEvidence(true)} className="results-btn verify-btn">
+                            <Search size={20} />
+                            <span>சரி பார்க்க (Verify)</span>
+                        </button>
                         <button onClick={() => navigate('/dashboard')} className="results-btn home-btn">
                             <Home size={20} />
                             <span>முகப்புக்கு செல்</span>
                         </button>
                     </div>
                 </div>
+
+                {/* Evidence Modal */}
+                {showEvidence && (
+                    <div className="evidence-modal-overlay" onClick={() => setShowEvidence(false)}>
+                        <div className="evidence-modal" onClick={e => e.stopPropagation()}>
+                            <div className="evidence-header">
+                                <h2>வினாக்களின் ஆதாரங்கள் (Evidence)</h2>
+                                <button className="close-btn" onClick={() => setShowEvidence(false)}>
+                                    <X size={24} />
+                                </button>
+                            </div>
+                            <div className="evidence-content">
+                                {QUIZ_EVIDENCE[dayNumber ? parseInt(dayNumber) : 0]?.map((item, idx) => (
+                                    <div key={idx} className="evidence-item">
+                                        <div className="evidence-q">{idx + 1}. {item.q}</div>
+                                        <div className="evidence-a">
+                                            <strong>பதில்:</strong>
+                                            <span>{item.a}</span>
+                                        </div>
+                                        <div className="evidence-p">
+                                            {item.p}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         );
     }
