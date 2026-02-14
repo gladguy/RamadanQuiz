@@ -119,7 +119,7 @@ const Dashboard = () => {
                                             <Lock size={24} />
                                         </div>
                                     )}
-                                    <div className="day-number">நோன்பு {day}</div>
+                                    <div className="day-number"><span className="day-label">நோன்பு</span> {day}</div>
                                     {unlocked && (
                                         <div className="day-status">தயாராக உள்ளது</div>
                                     )}

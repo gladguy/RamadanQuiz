@@ -473,9 +473,17 @@ body {
 }
 
 .day-number {
-  font-size: 2rem;
-  font-weight: 700;
+  font-size: 2.2rem;
+  font-weight: 800;
   margin-bottom: 0.5rem;
+  line-height: 1.2;
+}
+
+.day-label {
+  font-size: 50%;
+  display: block;
+  opacity: 0.8;
+  font-weight: 500;
 }
 
 .day-status {
@@ -575,7 +583,8 @@ body {
   }
 
   .day-number {
-    font-size: 1.1rem;
+    font-size: 1.5rem;
+    font-weight: 800;
   }
 
   .day-status {
