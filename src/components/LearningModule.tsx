@@ -29,7 +29,7 @@ const LearningModule = () => {
                     console.log(`📚 Loading mock slides for Day ${day} (instant)`);
                     setSlides(fetchedSlides);
                 } else {
-                    setError('இந்த நாளுக்கான பாடங்கள் இன்னும் கிடைக்கவில்லை');
+                    setError('இந்த நோன்பிற்கான பாடங்கள் இன்னும் கிடைக்கவில்லை');
                 }
             } catch (err) {
                 console.error('Error loading slides:', err);
@@ -95,7 +95,7 @@ const LearningModule = () => {
                     <ChevronLeft size={20} />
                     முகப்பு
                 </button>
-                <h1 className="learning-title">நாள் {dayNumber}</h1>
+                <h1 className="learning-title">{dayNumber === '0' ? 'பாடப் பயிற்சி (Trial)' : `நோன்பு ${dayNumber}`}</h1>
             </header>
 
             {/* Slide Display */}

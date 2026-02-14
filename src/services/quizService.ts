@@ -1,4 +1,5 @@
 import { Question } from '../types/quiz';
+import { getMockQuizForDay0 } from './Quiz/Quiz-0';
 import { getMockQuizForDay1 } from './Quiz/Quiz-1';
 import { getMockQuizForDay2 } from './Quiz/Quiz-2';
 import { getMockQuizForDay3 } from './Quiz/Quiz-3';
@@ -36,6 +37,8 @@ import { getMockQuizForDay30 } from './Quiz/Quiz-30';
  * Answers determined by careful analysis of the slide content in each Quiz file.
  */
 const QUIZ_ANSWER_KEY: Record<number, Record<number, string>> = {
+    // Day 0 – Pre-Ramadan Trial: Al-Fatiha & Al-Baqarah
+    0: { 1: 'B', 2: 'C', 3: 'B', 4: 'B', 5: 'C' },
     // Day 1 – Juz 1: Al-Fatiha & Al-Baqarah
     1: { 1: 'B', 2: 'C', 3: 'B', 4: 'B', 5: 'B' },
     // Day 2 – Juz 2: Al-Baqarah (cont.)
@@ -103,6 +106,7 @@ const QUIZ_ANSWER_KEY: Record<number, Record<number, string>> = {
  */
 const fetchRawQuizContent = (dayNumber: number): string => {
     const quizMap: Record<number, () => { content: string }[]> = {
+        0: getMockQuizForDay0,
         1: getMockQuizForDay1,
         2: getMockQuizForDay2,
         3: getMockQuizForDay3,

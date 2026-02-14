@@ -45,7 +45,7 @@ const QuizPage = () => {
             if (parsed.length > 0) {
                 setQuestions(parsed);
             } else {
-                setError('இந்த நாளுக்கான வினாடி வினா இன்னும் கிடைக்கவில்லை');
+                setError('இந்த நோன்பிற்கான வினாடி வினா இன்னும் கிடைக்கவில்லை');
             }
             setLoading(false);
         };
@@ -162,7 +162,9 @@ const QuizPage = () => {
             <div className="quiz-page-container">
                 <div className="quiz-results-card">
                     <div className="results-emoji">{emoji}</div>
-                    <h2 className="results-title">நாள் {dayNumber} - வினாடி வினா முடிவு</h2>
+                    <h2 className="results-title">
+                        {dayNumber === '0' ? 'பாடப் பயிற்சி (Trial)' : `நோன்பு ${dayNumber}`} - வினாடி வினா முடிவு
+                    </h2>
                     <div className="results-score-circle">
                         <span className="score-number">{score}</span>
                         <span className="score-divider">/</span>
@@ -247,7 +249,9 @@ const QuizPage = () => {
                     <ChevronLeft size={20} />
                     பாடங்கள்
                 </button>
-                <h1 className="quiz-title">நாள் {dayNumber} - வினாடி வினா</h1>
+                <h1 className="quiz-title">
+                    {dayNumber === '0' ? 'பாடப் பயிற்சி (Trial)' : `நோன்பு ${dayNumber}`} - வினாடி வினா
+                </h1>
             </header>
 
             {/* Progress */}

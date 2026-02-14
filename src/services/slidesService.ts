@@ -1,4 +1,5 @@
 import { Slide } from '../types/slide';
+import { getMockSlidesForDay100 } from './TrailSlides';
 import { getMockSlidesForDay1 } from './Day1Slides';
 import { getMockSlidesForDay2 } from './Day2Slides';
 import { getMockSlidesForDay3 } from './Day3Slides';
@@ -75,6 +76,7 @@ const stripQuizContent = (slides: Slide[]): Slide[] => {
 export const fetchSlidesByDay = (dayNumber: number): Slide[] => {
     let slides: Slide[];
     switch (dayNumber) {
+        case 0: slides = getMockSlidesForDay100(); break;
         case 1: slides = getMockSlidesForDay1(); break;
         case 2: slides = getMockSlidesForDay2(); break;
         case 3: slides = getMockSlidesForDay3(); break;
