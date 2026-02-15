@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getWhatsAppGroups, WhatsAppGroup } from '../services/whatsappGroupsService';
+import { useLanguage } from '../contexts/LanguageContext';
 import { Users, Check } from 'lucide-react';
 
 interface GroupSelectionModalProps {
@@ -8,6 +9,7 @@ interface GroupSelectionModalProps {
 }
 
 const GroupSelectionModal = ({ onSelect, currentGroup }: GroupSelectionModalProps) => {
+    const { t } = useLanguage();
     const [groups, setGroups] = useState<WhatsAppGroup[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -18,7 +20,7 @@ const GroupSelectionModal = ({ onSelect, currentGroup }: GroupSelectionModalProp
                 const fetchedGroups = await getWhatsAppGroups();
                 setGroups(fetchedGroups);
             } catch (err) {
-                setError('குழுக்களை ஏற்றுவதில் பிழை ஏற்பட்டது');
+                setError(t('common.error'));
             } finally {
                 setLoading(false);
             }
@@ -66,10 +68,10 @@ const GroupSelectionModal = ({ onSelect, currentGroup }: GroupSelectionModalProp
                 </div>
 
                 <h2 style={{ fontSize: '1.5rem', marginBottom: '0.5rem', color: 'var(--text-primary)' }}>
-                    உங்கள் வாட்ஸ்அப் குழுவை தேர்ந்தெடுக்கவும்
+                    {t('quiz.select_group')}
                 </h2>
                 <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem', fontSize: '1rem' }}>
-                    வினாடி வினாவைத் தொடர நீங்கள் எந்த குழுவைச் சேர்ந்தவர் என்பதை உறுதிப்படுத்தவும்
+                    {t('quiz.confirm_group')}
                 </p>
 
                 {loading ? (

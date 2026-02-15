@@ -108,7 +108,14 @@ const AdminDashboard = () => {
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                             <Trophy size={24} style={{ color: 'var(--gold-accent)' }} />
-                            <h2 style={{ fontSize: '1.25rem' }}>தேர்வு முடிவுகள்</h2>
+                            <h2 style={{ fontSize: '1.25rem', textAlign: 'left', lineHeight: '1.4' }}>
+                                <div>தேர்வு முடிவுகள்</div>
+                                {selectedGroup && (
+                                    <div style={{ color: 'var(--gold-accent)', fontSize: '1.1rem', marginTop: '0.2rem' }}>
+                                        {selectedGroup}
+                                    </div>
+                                )}
+                            </h2>
                         </div>
                         <select
                             value={selectedGroup}
@@ -125,7 +132,6 @@ const AdminDashboard = () => {
                             <thead>
                                 <tr style={{ borderBottom: '1px solid var(--border)' }}>
                                     <th style={{ padding: '1rem' }}>மின்னஞ்சல்</th>
-                                    <th style={{ padding: '1rem' }}>குழு</th>
                                     <th style={{ padding: '1rem' }}>நாள்</th>
                                     <th style={{ padding: '1rem' }}>மதிப்பெண்</th>
                                     <th style={{ padding: '1rem' }}>தேதி</th>
@@ -135,7 +141,6 @@ const AdminDashboard = () => {
                                 {filteredResults.map((res, idx) => (
                                     <tr key={idx} style={{ borderBottom: '1px solid var(--border)', fontSize: '0.9rem' }}>
                                         <td style={{ padding: '1rem' }}>{res.userEmail}</td>
-                                        <td style={{ padding: '1rem' }}><span style={{ padding: '0.2rem 0.5rem', background: 'rgba(238, 198, 95, 0.1)', color: 'var(--gold-accent)', borderRadius: '4px', border: '1px solid var(--gold-accent)' }}>{res.whatsappGroup}</span></td>
                                         <td style={{ padding: '1rem' }}>{res.dayNumber}</td>
                                         <td style={{ padding: '1rem' }}>{res.score}/{res.totalQuestions} ({res.percentage}%)</td>
                                         <td style={{ padding: '1rem' }}>{new Date(res.dateAttempted).toLocaleDateString()}</td>

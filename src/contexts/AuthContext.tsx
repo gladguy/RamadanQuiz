@@ -97,9 +97,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         }
 
         // Real Firebase auth - simple and reliable
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
             console.log('👤 Auth state:', user ? user.email : 'Not logged in');
             setCurrentUser(user);
+            if (user) {
+                // Sync profile to Firestore
+                const { syncUserProfile } = await import('../services/userService');
+                await syncUserProfile(user);
+            }
             setLoading(false);
         });
 

@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { LanguageProvider } from './contexts/LanguageContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import Landing from './pages/Landing';
 import Dashboard from './pages/Dashboard';
@@ -101,12 +102,14 @@ function AppRoutes() {
 function App() {
     return (
         <ThemeProvider>
-            <AuthProvider>
-                <BrowserRouter>
-                    <GlobalBismillah />
-                    <AppRoutes />
-                </BrowserRouter>
-            </AuthProvider>
+            <LanguageProvider>
+                <AuthProvider>
+                    <BrowserRouter>
+                        <GlobalBismillah />
+                        <AppRoutes />
+                    </BrowserRouter>
+                </AuthProvider>
+            </LanguageProvider>
         </ThemeProvider>
     );
 }

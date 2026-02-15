@@ -8,15 +8,22 @@ const RANK_LABELS = ['🥇', '🥈', '🥉'];
 const Leaderboard = () => {
     const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
     const [loading, setLoading] = useState(true);
+    const whatsappGroup = localStorage.getItem('ramadan_quiz_group');
 
     useEffect(() => {
         const fetchLeaderboard = async () => {
-            const data = await getLeaderboard(3);
+            if (!whatsappGroup) {
+                setLoading(false);
+                return;
+            }
+            const data = await getLeaderboard(3, whatsappGroup);
             setEntries(data);
             setLoading(false);
         };
         fetchLeaderboard();
-    }, []);
+    }, [whatsappGroup]);
+
+    if (!whatsappGroup) return null;
 
     if (loading) {
         return (
@@ -39,7 +46,7 @@ const Leaderboard = () => {
                     <Trophy size={24} />
                     சிறந்த மாணவர்கள்
                 </h2>
-                <p className="leaderboard-empty">இன்னும் யாரும் வினாடி வினாவை முயற்சிக்கவில்லை</p>
+                <p className="leaderboard-empty">உங்கள் குழுவில் இன்னும் யாரும் வினாடி வினாவை முயற்சிக்கவில்லை</p>
             </div>
         );
     }

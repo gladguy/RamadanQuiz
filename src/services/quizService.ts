@@ -102,9 +102,42 @@ const QUIZ_ANSWER_KEY: Record<number, Record<number, string>> = {
 };
 
 /**
- * Fetch raw quiz content for a specific day
+ * Fetch raw quiz content for a specific day and language
  */
-const fetchRawQuizContent = (dayNumber: number): string => {
+const fetchRawQuizContent = (dayNumber: number, language: string = 'ta'): string => {
+    // For now, only Day 0 has English content as a proof of concept
+    if (language === 'en' && dayNumber === 0) {
+        return `1. What is the special meaning of Allah's name 'Ar-Raheem'?
+A) Meriful to all creation
+B) Especially merciful to the believers  
+C) The One who punishes
+D) The One who provides wealth
+
+2. Who are the 'Muttaqin' mentioned in Surah Al-Baqarah?
+A) Those who speak a lot
+B) Those who only save wealth
+C) Those who believe in the unseen, establish prayer, and spend from what We have provided  
+D) Those who believe in nothing
+
+3. What did Allah teach Adam (AS)?
+A) Arts of war
+B) Names of all things  
+C) Farming
+D) Trading
+
+4. When the angels prostrated to Adam, who refused to do so?
+A) Jibreel
+B) Iblees  
+C) Mikaeel
+D) Israfeel
+
+5. Who built the Kaabah (House of Allah)?
+A) Musa and Isa
+B) Adam and Nuh
+C) Ibrahim and Ismail  
+D) Dawud and Sulaiman`;
+    }
+
     const quizMap: Record<number, () => { content: string }[]> = {
         0: getMockQuizForDay0,
         1: getMockQuizForDay1,
@@ -296,13 +329,13 @@ const shuffleQuestionOptions = (questions: Question[]): Question[] => {
 };
 
 /**
- * Fetch and parse quiz for a specific day.
+ * Fetch and parse quiz for a specific day and language.
  * Applies the explicit QUIZ_ANSWER_KEY to set correct answers reliably,
  * then shuffles options randomly so the correct answer appears in a
  * different position on every attempt.
  */
-export const fetchQuizByDay = (dayNumber: number): Question[] => {
-    const rawContent = fetchRawQuizContent(dayNumber);
+export const fetchQuizByDay = (dayNumber: number, language: string = 'ta'): Question[] => {
+    const rawContent = fetchRawQuizContent(dayNumber, language);
     if (!rawContent) return [];
     const questions = parseQuizContent(rawContent);
 

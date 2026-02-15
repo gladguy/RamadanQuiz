@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { fetchQuizByDay } from '../services/quizService';
 import { saveQuizResult, getUserQuizAttempt, QuizResultRecord } from '../services/quizResultsService';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { Question } from '../types/quiz';
 import { ChevronLeft, ChevronRight, Trophy, Home, CheckCircle, XCircle, Search, X } from 'lucide-react';
 import { QUIZ_EVIDENCE } from '../services/Quiz/Evidence';
@@ -12,6 +13,7 @@ const QuizPage = () => {
     const { dayNumber } = useParams<{ dayNumber: string }>();
     const navigate = useNavigate();
     const { currentUser, loading: authLoading } = useAuth();
+    const { t, language } = useLanguage();
 
     const [questions, setQuestions] = useState<Question[]>([]);
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -46,11 +48,11 @@ const QuizPage = () => {
                 }
             }
 
-            const parsed = fetchQuizByDay(day);
+            const parsed = fetchQuizByDay(day, language);
             if (parsed.length > 0) {
                 setQuestions(parsed);
             } else {
-                setError('இந்த நோன்பிற்கான வினாடி வினா இன்னும் கிடைக்கவில்லை');
+                setError(t('common.error'));
             }
             setLoading(false);
         };
@@ -149,7 +151,7 @@ const QuizPage = () => {
             <div className="quiz-page-container">
                 <div className="learning-module-loading">
                     <div className="spinner"></div>
-                    <p>வினாடி வினா ஏற்றப்படுகிறது...</p>
+                    <p>{t('quiz.save_status')}</p>
                 </div>
             </div>
         );
@@ -169,7 +171,7 @@ const QuizPage = () => {
                 <div className="quiz-results-card">
                     <div className="results-emoji">{emoji}</div>
                     <h2 className="results-title">
-                        {dayNumber === '0' ? 'பாடப் பயிற்சி (Trial)' : `நோன்பு ${dayNumber}`} - வினாடி வினா முடிவு
+                        {dayNumber === '0' ? t('dashboard.try_lesson') : `${t('dashboard.day_label')} ${dayNumber}`} - {t('quiz.results_title')}
                     </h2>
                     <div className="results-score-circle">
                         <span className="score-number">{score}</span>
@@ -178,18 +180,18 @@ const QuizPage = () => {
                     </div>
                     <div className="results-percentage">{percentage}%</div>
                     <p className="results-message">
-                        நீங்கள் இந்த வினாடி வினாவை இதற்க்கு முன்னர் முயற்சித்துள்ளீர்கள்.
+                        {t('quiz.already_attempted')}
                     </p>
                     <p className="results-save-status">📅 {attemptDate}</p>
 
                     <div className="results-actions">
                         <button onClick={() => setShowEvidence(true)} className="results-btn verify-btn">
                             <Search size={20} />
-                            <span>சரி பார்க்க (Verify)</span>
+                            <span>{t('quiz.verify')}</span>
                         </button>
                         <button onClick={() => navigate('/dashboard')} className="results-btn home-btn">
                             <Home size={20} />
-                            <span>முகப்புக்கு செல்</span>
+                            <span>{t('common.home')}</span>
                         </button>
                     </div>
                 </div>
@@ -201,10 +203,10 @@ const QuizPage = () => {
         return (
             <div className="quiz-page-container">
                 <div className="learning-module-error">
-                    <h2>மன்னிக்கவும்</h2>
-                    <p>{error || 'வினாக்கள் கிடைக்கவில்லை'}</p>
+                    <h2>{t('common.error')}</h2>
+                    <p>{error || t('common.error')}</p>
                     <button onClick={() => navigate('/dashboard')} className="back-to-dashboard">
-                        முகப்புக்கு திரும்பு
+                        {t('common.home')}
                     </button>
                 </div>
             </div>
@@ -217,18 +219,18 @@ const QuizPage = () => {
         const percentage = Math.round((score / questions.length) * 100);
         const emoji = percentage >= 80 ? '🌟' : percentage >= 60 ? '👍' : percentage >= 40 ? '📖' : '💪';
         const message = percentage >= 80
-            ? 'மாஷா அல்லாஹ்! சிறப்பான மதிப்பெண்!'
+            ? (language === 'ta' ? 'மாஷா அல்லாஹ்! சிறப்பான மதிப்பெண்!' : 'Masha Allah! Excellent score!')
             : percentage >= 60
-                ? 'நல்ல முயற்சி! இன்னும் சிறப்பாக செய்யலாம்!'
+                ? (language === 'ta' ? 'நல்ல முயற்சி! இன்னும் சிறப்பாக செய்யலாம்!' : 'Good effort! You can do even better!')
                 : percentage >= 40
-                    ? 'மீண்டும் பாடங்களைப் படித்து முயற்சிக்கவும்'
-                    : 'விடாமல் முயற்சி செய்யுங்கள்! அல்லாஹ் உதவி செய்வான்!';
+                    ? (language === 'ta' ? 'மீண்டும் பாடங்களைப் படித்து முயற்சிக்கவும்' : 'Study the lesson again and try hard')
+                    : (language === 'ta' ? 'விடாமல் முயற்சி செய்யுங்கள்! அல்லாஹ் உதவி செய்வான்!' : 'Keep trying! Allah will help you!');
 
         return (
             <div className="quiz-page-container">
                 <div className="quiz-results-card">
                     <div className="results-emoji">{emoji}</div>
-                    <h2 className="results-title">வினாடி வினா முடிவு</h2>
+                    <h2 className="results-title">{t('quiz.results_title')}</h2>
                     <div className="results-score-circle">
                         <span className="score-number">{score}</span>
                         <span className="score-divider">/</span>
@@ -236,17 +238,17 @@ const QuizPage = () => {
                     </div>
                     <div className="results-percentage">{percentage}%</div>
                     <p className="results-message">{message}</p>
-                    {saving && <p className="results-save-status">💾 சேமிக்கப்படுகிறது...</p>}
-                    {saved && <p className="results-save-status saved">✅ மதிப்பெண் சேமிக்கப்பட்டது!</p>}
+                    {saving && <p className="results-save-status">💾 {t('quiz.save_status')}</p>}
+                    {saved && <p className="results-save-status saved">✅ {t('quiz.saved_status')}</p>}
 
                     <div className="results-actions">
                         <button onClick={() => setShowEvidence(true)} className="results-btn verify-btn">
                             <Search size={20} />
-                            <span>சரி பார்க்க (Verify)</span>
+                            <span>{t('quiz.verify')}</span>
                         </button>
                         <button onClick={() => navigate('/dashboard')} className="results-btn home-btn">
                             <Home size={20} />
-                            <span>முகப்புக்கு செல்</span>
+                            <span>{t('common.home')}</span>
                         </button>
                     </div>
                 </div>
@@ -256,7 +258,7 @@ const QuizPage = () => {
                     <div className="evidence-modal-overlay" onClick={() => setShowEvidence(false)}>
                         <div className="evidence-modal" onClick={e => e.stopPropagation()}>
                             <div className="evidence-header">
-                                <h2>வினாக்களின் ஆதாரங்கள் (Evidence)</h2>
+                                <h2>{t('quiz.evidence_title')}</h2>
                                 <button className="close-btn" onClick={() => setShowEvidence(false)}>
                                     <X size={24} />
                                 </button>
@@ -289,17 +291,17 @@ const QuizPage = () => {
             <header className="quiz-header">
                 <button onClick={() => navigate(`/learn/${dayNumber}`)} className="back-button">
                     <ChevronLeft size={20} />
-                    பாடங்கள்
+                    {t('common.back')}
                 </button>
                 <h1 className="quiz-title">
-                    {dayNumber === '0' ? 'பாடப் பயிற்சி (Trial)' : `நோன்பு ${dayNumber}`} - வினாடி வினா
+                    {dayNumber === '0' ? t('dashboard.try_lesson') : `${t('dashboard.day_label')} ${dayNumber}`} - {t('quiz.title')}
                 </h1>
             </header>
 
             {/* Progress */}
             <div className="quiz-progress">
                 <span className="quiz-progress-text">
-                    கேள்வி {currentIndex + 1} / {questions.length}
+                    {t('quiz.question')} {currentIndex + 1} / {questions.length}
                 </span>
                 <div className="progress-bar">
                     <div
@@ -345,7 +347,7 @@ const QuizPage = () => {
                     className="slide-nav-btn"
                 >
                     <ChevronLeft size={24} />
-                    <span>முந்தைய</span>
+                    <span>{t('common.previous')}</span>
                 </button>
 
                 {isLastQuestion && isAnswered ? (
@@ -362,7 +364,7 @@ const QuizPage = () => {
                         disabled={!isRevealed}
                         className="slide-nav-btn primary"
                     >
-                        <span>அடுத்தது</span>
+                        <span>{t('common.next')}</span>
                         <ChevronRight size={24} />
                     </button>
                 )}

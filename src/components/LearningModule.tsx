@@ -3,11 +3,13 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { fetchSlidesByDay } from '../services/slidesService';
 import { Slide as SlideType } from '../types/slide';
 import Slide from './Slide';
+import { useLanguage } from '../contexts/LanguageContext';
 import { ChevronLeft, ChevronRight, PlayCircle, Loader } from 'lucide-react';
 
 const LearningModule = () => {
     const { dayNumber } = useParams<{ dayNumber: string }>();
     const navigate = useNavigate();
+    const { t, language } = useLanguage();
 
     const [slides, setSlides] = useState<SlideType[]>([]);
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -23,17 +25,17 @@ const LearningModule = () => {
                 setLoading(true);
 
                 const day = parseInt(dayNumber);
-                const fetchedSlides = fetchSlidesByDay(day);
+                const fetchedSlides = fetchSlidesByDay(day, language);
 
                 if (fetchedSlides.length > 0) {
                     console.log(`📚 Loading mock slides for Day ${day} (instant)`);
                     setSlides(fetchedSlides);
                 } else {
-                    setError('இந்த நோன்பிற்கான பாடங்கள் இன்னும் கிடைக்கவில்லை');
+                    setError(t('common.error'));
                 }
             } catch (err) {
                 console.error('Error loading slides:', err);
-                setError('பாடங்களை ஏற்றுவதில் பிழை ஏற்பட்டது');
+                setError(t('common.error'));
             } finally {
                 setLoading(false);
             }
@@ -69,8 +71,7 @@ const LearningModule = () => {
         return (
             <div className="learning-module-loading">
                 <Loader className="spinner-icon" size={48} />
-                <p>பாடங்களை டவுன்லோடு ஆகிறது !</p>
-                <p style={{ fontSize: '0.9rem', marginTop: '-0.5rem' }}>தயவு செய்து காத்திருக்கவும் ...</p>
+                <p>{t('common.loading')}</p>
             </div>
         );
     }
@@ -78,10 +79,10 @@ const LearningModule = () => {
     if (error || slides.length === 0) {
         return (
             <div className="learning-module-error">
-                <h2>மன்னிக்கவும்</h2>
-                <p>{error || 'பாடங்கள் கிடைக்கவில்லை'}</p>
+                <h2>{t('common.error')}</h2>
+                <p>{error || t('common.error')}</p>
                 <button onClick={() => navigate('/dashboard')} className="back-to-dashboard">
-                    முகப்புக்கு திரும்பு
+                    {t('common.home')}
                 </button>
             </div>
         );
@@ -93,9 +94,9 @@ const LearningModule = () => {
             <header className="learning-header">
                 <button onClick={() => navigate('/dashboard')} className="back-button">
                     <ChevronLeft size={20} />
-                    முகப்பு
+                    {t('common.home')}
                 </button>
-                <h1 className="learning-title">{dayNumber === '0' ? 'பாடப் பயிற்சி (Trial)' : `நோன்பு ${dayNumber}`}</h1>
+                <h1 className="learning-title">{dayNumber === '0' ? t('dashboard.try_lesson') : `${t('dashboard.day_label')} ${dayNumber}`}</h1>
             </header>
 
             {/* Slide Display */}
@@ -113,7 +114,7 @@ const LearningModule = () => {
                             className="slide-nav-btn"
                         >
                             <ChevronLeft size={24} />
-                            <span>முந்தைய</span>
+                            <span>{t('common.previous')}</span>
                         </button>
 
                         {!isLastSlide ? (
@@ -121,7 +122,7 @@ const LearningModule = () => {
                                 onClick={handleNext}
                                 className="slide-nav-btn primary"
                             >
-                                <span>அடுத்தது</span>
+                                <span>{t('common.next')}</span>
                                 <ChevronRight size={24} />
                             </button>
                         ) : (
@@ -131,7 +132,7 @@ const LearningModule = () => {
                                 className={`quiz-button ${allSlidesViewed ? 'enabled' : 'disabled'}`}
                             >
                                 <PlayCircle size={24} />
-                                <span>வினாடி வினாவைத் தொடங்கு</span>
+                                <span>{t('quiz.title')}</span>
                             </button>
                         )}
                     </div>

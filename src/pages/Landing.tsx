@@ -1,8 +1,11 @@
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { BookOpen, Calendar, Trophy, Sparkles } from 'lucide-react';
+import LanguageToggle from '../components/LanguageToggle';
 
 const Landing = () => {
     const { signInWithGoogle } = useAuth();
+    const { t } = useLanguage();
 
     const handleSignIn = async () => {
         try {
@@ -14,6 +17,18 @@ const Landing = () => {
 
     return (
         <div className="landing-container">
+            <header className="landing-header" style={{
+                padding: '1rem 2rem',
+                display: 'flex',
+                justifyContent: 'flex-end',
+                position: 'absolute',
+                top: 0,
+                right: 0,
+                width: '100%',
+                zIndex: 10
+            }}>
+                <LanguageToggle />
+            </header>
             <div className="landing-content">
                 {/* Hero Section */}
                 <div className="hero-section">
@@ -21,11 +36,11 @@ const Landing = () => {
                         <BookOpen size={64} />
                     </div>
                     <h1 className="hero-title">
-                        <span className="desktop-only">ரமழான் 2026 (ஹிஜிரி 1447) - குர்ஆன் கேள்வி பதில்</span>
-                        <span className="mobile-only">ரமழான் கேள்வி பதில்</span>
+                        <span className="desktop-only">{t('landing.hero_title_desktop')}</span>
+                        <span className="mobile-only">{t('landing.hero_title_mobile')}</span>
                     </h1>
                     <p className="hero-subtitle">
-                        ரமழானின் ஒவ்வொரு நாளும் குர்ஆனுடன் நெருக்கமாகுங்கள்
+                        {t('landing.hero_subtitle')}
                     </p>
                 </div>
 
@@ -33,33 +48,33 @@ const Landing = () => {
                 <div className="features-grid">
                     <div className="feature-card">
                         <Calendar className="feature-icon" size={32} />
-                        <h3 className="feature-title">30 நாட்கள்</h3>
+                        <h3 className="feature-title">{t('landing.feature_30days_title')}</h3>
                         <p className="feature-description">
-                            ரமழானின் ஒவ்வொரு நாளும் ஒரு புதிய பாடம்
+                            {t('landing.feature_30days_desc')}
                         </p>
                     </div>
 
                     <div className="feature-card">
                         <BookOpen className="feature-icon" size={32} />
-                        <h3 className="feature-title">தினசரி வாசிப்பு</h3>
+                        <h3 className="feature-title">{t('landing.feature_reading_title')}</h3>
                         <p className="feature-description">
-                            குர்ஆனின் தேர்ந்தெடுக்கப்பட்ட வசனங்கள்
+                            {t('landing.feature_reading_desc')}
                         </p>
                     </div>
 
                     <div className="feature-card">
                         <Trophy className="feature-icon" size={32} />
-                        <h3 className="feature-title">முன்னேற்றம்</h3>
+                        <h3 className="feature-title">{t('landing.feature_progress_title')}</h3>
                         <p className="feature-description">
-                            உங்கள் பயணத்தை கண்காணியுங்கள்
+                            {t('landing.feature_progress_desc')}
                         </p>
                     </div>
 
                     <div className="feature-card">
                         <Sparkles className="feature-icon" size={32} />
-                        <h3 className="feature-title">ஆன்மீக வளர்ச்சி</h3>
+                        <h3 className="feature-title">{t('landing.feature_spiritual_title')}</h3>
                         <p className="feature-description">
-                            தினமும் புதிய நுண்ணறிவுகளை கண்டறியுங்கள்
+                            {t('landing.feature_spiritual_desc')}
                         </p>
                     </div>
                 </div>
@@ -73,7 +88,7 @@ const Landing = () => {
                             <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
                             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
                         </svg>
-                        Google இல் உள்நுழைக
+                        {t('landing.signin_google')}
                     </button>
                 </div>
             </div>

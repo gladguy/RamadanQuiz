@@ -70,10 +70,10 @@ const stripQuizContent = (slides: Slide[]): Slide[] => {
 };
 
 /**
- * Service to fetch slides for a specific day.
+ * Service to fetch slides for a specific day and language.
  * This can be updated to use dynamic imports or a remote API in the future.
  */
-export const fetchSlidesByDay = (dayNumber: number): Slide[] => {
+export const fetchSlidesByDay = (dayNumber: number, language: string = 'ta'): Slide[] => {
     let slides: Slide[];
     switch (dayNumber) {
         case 0: slides = getMockSlidesForDay100(); break;

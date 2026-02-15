@@ -1,13 +1,16 @@
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { isDayUnlocked } from '../utils/ramadanDates';
 import { Lock, BookOpen, LogOut, Globe, Shield } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Leaderboard from '../components/Leaderboard';
+import LanguageToggle from '../components/LanguageToggle';
 import { getUserRegion, setUserRegion, REGION_CONFIGS, Region } from '../services/regionService';
 import { useState } from 'react';
 
 const Dashboard = () => {
     const { currentUser, isAdmin, signOut } = useAuth();
+    const { t } = useLanguage();
     const navigate = useNavigate();
     const [region, setRegion] = useState<Region>(getUserRegion());
 
@@ -44,11 +47,11 @@ const Dashboard = () => {
                             <BookOpen size={32} className="header-icon" />
                             <div>
                                 <h1 className="header-title">
-                                    <span className="desktop-only">ரமழான் 2026 (ஹிஜிரி 1447) - குர்ஆன் கேள்வி பதில்</span>
-                                    <span className="mobile-only">ரமழான் கேள்வி பதில்</span>
+                                    <span className="desktop-only">{t('dashboard.title_desktop')}</span>
+                                    <span className="mobile-only">{t('dashboard.title_mobile')}</span>
                                 </h1>
                                 <p className="header-subtitle">
-                                    வரவேற்கிறோம், {currentUser?.displayName || 'நண்பரே'}!
+                                    {t('common.welcome')}, {currentUser?.displayName || t('common.guest')}!
                                 </p>
                             </div>
                         </div>
@@ -87,12 +90,13 @@ const Dashboard = () => {
                                 }}
                             >
                                 <Shield size={20} />
-                                <span className="desktop-only">Admin</span>
+                                <span className="desktop-only">{t('common.admin')}</span>
                             </button>
                         )}
+                        <LanguageToggle />
                         <button onClick={handleSignOut} className="signout-btn">
                             <LogOut size={20} />
-                            <span className="desktop-only">வெளியேறு</span>
+                            <span className="desktop-only">{t('common.signout')}</span>
                             <span className="mobile-only" style={{ fontSize: '1.2rem' }}>🚪➡️</span>
                         </button>
                     </div>
@@ -141,9 +145,9 @@ const Dashboard = () => {
                                             <Lock size={24} />
                                         </div>
                                     )}
-                                    <div className="day-number"><span className="day-label">நோன்பு</span> {day}</div>
+                                    <div className="day-number"><span className="day-label">{t('dashboard.day_label')}</span> {day}</div>
                                     {unlocked && (
-                                        <div className="day-status">தயாராக உள்ளது</div>
+                                        <div className="day-status">{t('dashboard.day_ready')}</div>
                                     )}
                                 </div>
                             </div>

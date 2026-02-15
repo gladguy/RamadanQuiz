@@ -77,14 +77,25 @@ export interface LeaderboardEntry {
 
 /**
  * Fetch leaderboard: aggregate all quiz results per user, return top N users.
+ * Filters by whatsappGroup and excludes the admin.
  */
-export const getLeaderboard = async (topN: number = 3): Promise<LeaderboardEntry[]> => {
+export const getLeaderboard = async (topN: number = 3, groupName?: string): Promise<LeaderboardEntry[]> => {
     try {
-        const snapshot = await getDocs(collection(db, 'quizResults'));
+        const adminEmail = 'kwaheedsays@gmail.com';
+        let q = query(collection(db, 'quizResults'));
+
+        if (groupName) {
+            q = query(collection(db, 'quizResults'), where('whatsappGroup', '==', groupName));
+        }
+
+        const snapshot = await getDocs(q);
         const userMap: Record<string, { totalScore: number; totalQuestions: number; quizzesTaken: number }> = {};
 
         snapshot.docs.forEach(doc => {
             const data = doc.data() as QuizResultRecord;
+            // Exclude admin
+            if (data.userEmail === adminEmail) return;
+
             if (!userMap[data.userEmail]) {
                 userMap[data.userEmail] = { totalScore: 0, totalQuestions: 0, quizzesTaken: 0 };
             }
@@ -93,9 +104,17 @@ export const getLeaderboard = async (topN: number = 3): Promise<LeaderboardEntry
             userMap[data.userEmail].quizzesTaken += 1;
         });
 
+        // Fetch user profiles to get real full names
+        const usersSnapshot = await getDocs(collection(db, 'quizUsers'));
+        const profileMap: Record<string, string> = {};
+        usersSnapshot.docs.forEach(doc => {
+            const data = doc.data();
+            profileMap[data.email] = data.fullName || data.displayName || data.email.split('@')[0];
+        });
+
         const entries: LeaderboardEntry[] = Object.entries(userMap).map(([email, stats]) => ({
             userEmail: email,
-            displayName: email.split('@')[0],
+            displayName: profileMap[email] || email.split('@')[0],
             totalScore: stats.totalScore,
             totalQuestions: stats.totalQuestions,
             quizzesTaken: stats.quizzesTaken,
