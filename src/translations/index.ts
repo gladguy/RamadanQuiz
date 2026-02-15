@@ -16,11 +16,11 @@ export const translations = {
             guest: 'நண்பரே',
         },
         landing: {
-            hero_title_desktop: 'ரமழான் 2026 (ஹிஜிரி 1447) - குர்ஆன் கேள்வி பதில்',
-            hero_title_mobile: 'ரமழான் கேள்வி பதில்',
-            hero_subtitle: 'ரமழானின் ஒவ்வொரு நாளும் குர்ஆனுடன் நெருக்கமாகுங்கள்',
+            hero_title_desktop: 'ரமலான் 2026 (ஹிஜிரி 1447) - குர்ஆன் கேள்வி பதில்',
+            hero_title_mobile: 'ரமலான் கேள்வி பதில்',
+            hero_subtitle: 'ரமலானின் ஒவ்வொரு நாளும் குர்ஆனுடன் நெருக்கமாகுங்கள்',
             feature_30days_title: '30 நாட்கள்',
-            feature_30days_desc: 'ரமழானின் ஒவ்வொரு நாளும் ஒரு புதிய பாடம்',
+            feature_30days_desc: 'ரமலானின் ஒவ்வொரு நாளும் ஒரு புதிய பாடம்',
             feature_reading_title: 'தினசரி வாசிப்பு',
             feature_reading_desc: 'குர்ஆனின் தேர்ந்தெடுக்கப்பட்ட வசனங்கள்',
             feature_progress_title: 'முன்னேற்றம்',
@@ -30,9 +30,9 @@ export const translations = {
             signin_google: 'Google இல் உள்நுழைக',
         },
         dashboard: {
-            title_desktop: 'ரமழான் 2026 (ஹிஜிரி 1447) - குர்ஆன் கேள்வி பதில்',
-            title_mobile: 'ரமழான் கேள்வி பதில்',
-            day_label: 'ரமழான்',
+            title_desktop: 'ரமலான் 2026 (ஹிஜிரி 1447) - குர்ஆன் கேள்வி பதில்',
+            title_mobile: 'ரமலான் கேள்வி பதில்',
+            day_label: 'ரமலான்',
             day_ready: 'தயாராக உள்ளது',
             try_lesson: 'பாடப் பயிற்சி (Trial)',
             leaderboard_title: 'முன்னணி வீரர்கள்',
@@ -48,8 +48,15 @@ export const translations = {
             saved_status: 'மதிப்பெண் சேமிக்கப்பட்டது!',
             already_attempted: 'நீங்கள் இந்த வினாடி வினாவை இதற்க்கு முன்னர் முயற்சித்துள்ளீர்கள்.',
             evidence_title: 'வினாக்களின் ஆதாரங்கள் (Evidence)',
-            select_group_title: 'உங்கள் வாட்ஸ்அப் குழுவை தேர்ந்தெடுக்கவும்',
-            select_group_desc: 'வினாடி வினாவைத் தொடர நீங்கள் எந்த குழுவைச் சேர்ந்தவர் என்பதை உறுதிப்படுத்தவும்',
+            select_group: 'உங்கள் வாட்ஸ்அப் குழுவைத் தேர்ந்தெடுக்கவும்.',
+            confirm_group: 'வாட்ஸ்அப் குழு',
+            mushaf_tap_instruction: 'மனப்பாடம் செய்த பிறகு முஷாஃப்பைக் கிளிக் செய்யவும்',
+            completed_status: 'அல்ஹம்துலில்லாஹ்!',
+            listen_audio: 'சூராவைக் கேளுங்கள்',
+            show_results: 'முடிவுகள்',
+        },
+        mulk: {
+            title: 'ஸுராஹ் முல்க் - தினம் ஒரு ஆயத் மனனம் செய்வோம்',
         }
     },
     en: {
@@ -101,8 +108,15 @@ export const translations = {
             saved_status: 'Score saved!',
             already_attempted: 'You have already attempted this quiz.',
             evidence_title: 'Question Evidence',
-            select_group_title: 'Select Your WhatsApp Group',
-            select_group_desc: 'Please confirm your group to continue the quiz',
+            select_group: 'Select your Whatsapp Group',
+            confirm_group: 'Whatsapp Group',
+            mushaf_tap_instruction: 'Tap Mushaf after memorizing to complete',
+            completed_status: 'Alhamdulillah! Completed',
+            listen_audio: 'Listen to Audio',
+            show_results: 'Results',
+        },
+        mulk: {
+            title: "Surah Mulk - Let's memorize one verse a day",
         }
     }
 };

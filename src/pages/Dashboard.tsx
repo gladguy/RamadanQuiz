@@ -82,19 +82,26 @@ const Dashboard = () => {
                         </div>
 
                         {region && (
-                            <div className="region-display" style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.5rem',
-                                background: 'var(--surface-light)',
-                                padding: '0.4rem 0.8rem',
-                                borderRadius: '20px',
-                                border: '1px solid var(--gold-accent)',
-                                color: 'var(--text-primary)',
-                                fontSize: '1rem'
-                            }}>
+                            <div
+                                className="region-display"
+                                onClick={() => setShowRegionModal(true)}
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.4rem',
+                                    background: 'var(--surface-light)',
+                                    padding: '0.4rem 0.8rem',
+                                    borderRadius: '20px',
+                                    border: '1px solid var(--gold-accent)',
+                                    color: 'var(--text-primary)',
+                                    fontSize: '1rem',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.3s ease'
+                                }}
+                            >
                                 <span style={{ fontSize: '1.2rem' }}>{REGION_CONFIGS[region].flag}</span>
                                 <span>{REGION_CONFIGS[region].name}</span>
+                                <span style={{ fontSize: '0.7rem', color: 'var(--gold-accent)', marginLeft: '2px', opacity: 0.8 }}>▼</span>
                             </div>
                         )}
                     </div>

@@ -128,14 +128,16 @@ const MulkChallenge = () => {
     return (
         <div className="learning-module-container">
             <header className="learning-header" style={{ flexDirection: 'column', gap: '1rem', padding: '1.5rem 2rem' }}>
-                <div style={{ display: 'flex', width: '100%', alignItems: 'center', position: 'relative', justifyContent: 'center' }}>
-                    <button onClick={() => navigate(-1)} className="back-button" style={{ position: 'absolute', left: 0 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr auto', width: '100%', alignItems: 'center', gap: '1rem' }}>
+                    <button onClick={() => navigate(-1)} className="back-button">
                         <ChevronLeft size={20} />
                         <span className="desktop-only">{t('common.back')}</span>
                     </button>
-                    <h1 className="learning-title" style={{ margin: 0 }}>
-                        ஸுராஹ் முல்க் - தினம் ஒரு ஆயத் மனனம் செய்வோம் (<span className="metallic-gold-text">Ramadan</span> {currentDay})
+                    <h1 className="learning-title" style={{ margin: 0, textAlign: 'center' }}>
+                        {t('mulk.title')} (<span className="metallic-gold-text">{t('dashboard.day_label')}</span> {currentDay})
                     </h1>
+                    {/* Placeholder for symmetry */}
+                    <div style={{ width: '40px' }} className="desktop-only"></div>
                 </div>
             </header>
 
@@ -148,50 +150,6 @@ const MulkChallenge = () => {
                                 سورة الملك
                             </h2>
                             <p style={{ color: 'var(--text-secondary)' }}>Ayah {ayah.numberInSurah}</p>
-                        </div>
-
-                        <div style={{ marginBottom: '3rem' }}>
-                            <div style={{
-                                background: 'var(--surface-light)',
-                                padding: '3rem 2rem',
-                                borderRadius: '24px',
-                                border: '2px solid transparent',
-                                backgroundImage: 'linear-gradient(var(--surface-light), var(--surface-light)), var(--primary-gradient)',
-                                backgroundOrigin: 'border-box',
-                                backgroundClip: 'padding-box, border-box',
-                                boxShadow: '0 10px 40px rgba(0,0,0,0.6)',
-                                position: 'relative'
-                            }}>
-                                <p style={{
-                                    fontSize: '3rem',
-                                    lineHeight: '1.5',
-                                    marginBottom: '2rem',
-                                    color: 'var(--text-primary)',
-                                    fontFamily: "'Scheherazade New', serif",
-                                    direction: 'rtl',
-                                    textShadow: '0 2px 4px rgba(0,0,0,0.3)'
-                                }}>
-                                    {ayah.arabicText}
-                                </p>
-                                <div style={{
-                                    width: '60px',
-                                    height: '3px',
-                                    background: 'var(--primary-gradient)',
-                                    margin: '0 auto 2rem',
-                                    borderRadius: '2px'
-                                }}></div>
-
-                                <p style={{
-                                    fontSize: '1.25rem',
-                                    lineHeight: '1.8',
-                                    color: 'var(--text-secondary)',
-                                    fontStyle: 'italic',
-                                    maxWidth: '800px',
-                                    margin: '0 auto 2.5rem'
-                                }}>
-                                    "{ayah.text}"
-                                </p>
-                            </div>
                         </div>
 
                         <div style={{
@@ -208,7 +166,7 @@ const MulkChallenge = () => {
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', justifyContent: 'center' }}>
                                 <Music size={24} style={{ color: 'var(--gold-accent)' }} />
                                 <span style={{ fontWeight: '700', letterSpacing: '0.5px', textTransform: 'uppercase', fontSize: '0.9rem', color: 'var(--gold-accent)' }}>
-                                    Listen to Audio
+                                    {t('quiz.listen_audio')}
                                 </span>
                             </div>
                             <audio
@@ -283,6 +241,50 @@ const MulkChallenge = () => {
                             </div>
                         </div>
 
+                        <div style={{ marginBottom: '3rem' }}>
+                            <div style={{
+                                background: 'var(--surface-light)',
+                                padding: '3rem 2rem',
+                                borderRadius: '24px',
+                                border: '2px solid transparent',
+                                backgroundImage: 'linear-gradient(var(--surface-light), var(--surface-light)), var(--primary-gradient)',
+                                backgroundOrigin: 'border-box',
+                                backgroundClip: 'padding-box, border-box',
+                                boxShadow: '0 10px 40px rgba(0,0,0,0.6)',
+                                position: 'relative'
+                            }}>
+                                <p style={{
+                                    fontSize: '3rem',
+                                    lineHeight: '1.5',
+                                    marginBottom: '2rem',
+                                    color: 'var(--text-primary)',
+                                    fontFamily: "'Scheherazade New', serif",
+                                    direction: 'rtl',
+                                    textShadow: '0 2px 4px rgba(0,0,0,0.3)'
+                                }}>
+                                    {ayah.arabicText}
+                                </p>
+                                <div style={{
+                                    width: '60px',
+                                    height: '3px',
+                                    background: 'var(--primary-gradient)',
+                                    margin: '0 auto 2rem',
+                                    borderRadius: '2px'
+                                }}></div>
+
+                                <p style={{
+                                    fontSize: '1.25rem',
+                                    lineHeight: '1.8',
+                                    color: 'var(--text-secondary)',
+                                    fontStyle: 'italic',
+                                    maxWidth: '800px',
+                                    margin: '0 auto 2.5rem'
+                                }}>
+                                    "{ayah.text}"
+                                </p>
+                            </div>
+                        </div>
+
                         <div style={{
                             display: 'flex',
                             flexDirection: 'column',
@@ -336,7 +338,7 @@ const MulkChallenge = () => {
                                 textTransform: 'uppercase',
                                 letterSpacing: '1px'
                             }}>
-                                {isCompleted ? 'Alhamdulillah! Completed' : 'Tap Mushaf to Complete'}
+                                {isCompleted ? t('quiz.completed_status') : t('quiz.mushaf_tap_instruction')}
                             </span>
                         </div>
                     </div>

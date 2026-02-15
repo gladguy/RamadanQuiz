@@ -9,13 +9,6 @@ interface RegionSelectionModalProps {
 
 const RegionSelectionModal = ({ onSelect }: RegionSelectionModalProps) => {
     const { t } = useLanguage();
-    const [selectedRegion, setSelectedRegion] = useState<Region | ''>('');
-
-    const handleSave = () => {
-        if (selectedRegion) {
-            onSelect(selectedRegion as Region);
-        }
-    };
 
     return (
         <div className="group-selection-overlay" style={{
@@ -57,64 +50,51 @@ const RegionSelectionModal = ({ onSelect }: RegionSelectionModalProps) => {
                     நாட்டைத் தேர்ந்தெடுக்கவும்
                 </h2>
                 <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem', fontSize: '1.1rem', lineHeight: '1.5' }}>
-                    சரியான நேரத்தைக் கணக்கிட உங்கள் நாட்டைத் தேர்ந்தெடுக்கவும். இதை ஒருமுறை மட்டுமே செய்ய முடியும்.<br />
-                    (Please select your country for accurate date calculation. This can only be set once.)
+                    சரியான நேரத்தைக் கணக்கிட உங்கள் நாட்டைத் தேர்ந்தெடுக்கவும்.<br />
+                    (Please select your country for accurate date calculation.)
                 </p>
 
                 <div className="regions-grid" style={{
                     display: 'grid',
                     gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
                     gap: '1rem',
-                    maxHeight: '350px',
+                    maxHeight: '400px',
                     overflowY: 'auto',
                     padding: '0.5rem',
-                    marginBottom: '2rem',
+                    marginBottom: '1rem',
                     textAlign: 'left'
                 }}>
                     {Object.entries(REGION_CONFIGS).map(([key, config]) => (
                         <button
                             key={key}
-                            onClick={() => setSelectedRegion(key as Region)}
+                            onClick={() => onSelect(key as Region)}
                             style={{
                                 display: 'flex',
                                 alignItems: 'center',
                                 gap: '0.75rem',
                                 padding: '0.8rem 1rem',
-                                background: selectedRegion === key ? 'rgba(238, 198, 95, 0.15)' : 'var(--surface-light)',
-                                border: selectedRegion === key ? '2px solid var(--gold-accent)' : '1px solid var(--border)',
+                                background: 'var(--surface-light)',
+                                border: '1px solid var(--border)',
                                 borderRadius: '16px',
                                 color: 'var(--text-primary)',
                                 cursor: 'pointer',
                                 transition: 'all 0.2s',
                                 fontSize: '1rem'
                             }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.border = '1px solid var(--gold-accent)';
+                                e.currentTarget.style.background = 'rgba(238, 198, 95, 0.05)';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.border = '1px solid var(--border)';
+                                e.currentTarget.style.background = 'var(--surface-light)';
+                            }}
                         >
                             <span style={{ fontSize: '1.4rem' }}>{config.flag}</span>
                             <span style={{ flex: 1 }}>{config.name}</span>
-                            {selectedRegion === key && <Check size={18} style={{ color: 'var(--gold-accent)' }} />}
                         </button>
                     ))}
                 </div>
-
-                <button
-                    onClick={handleSave}
-                    disabled={!selectedRegion}
-                    style={{
-                        width: '100%',
-                        padding: '1.2rem',
-                        borderRadius: '16px',
-                        border: 'none',
-                        background: selectedRegion ? 'var(--primary-gradient)' : 'var(--border)',
-                        color: selectedRegion ? 'white' : 'var(--text-secondary)',
-                        cursor: selectedRegion ? 'pointer' : 'not-allowed',
-                        fontWeight: 'bold',
-                        fontSize: '1.1rem',
-                        boxShadow: selectedRegion ? '0 10px 20px rgba(238, 198, 95, 0.2)' : 'none',
-                        transition: 'all 0.3s'
-                    }}
-                >
-                    உறுதிப்படுத்து (Confirm)
-                </button>
             </div>
         </div>
     );

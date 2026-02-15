@@ -78,6 +78,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         }
 
         try {
+            // Clear user-specific preferences
+            localStorage.removeItem('user_ramadan_region');
+            localStorage.removeItem('ramadan_quiz_group');
+            localStorage.removeItem('ramadan_quiz_lang');
+
             await firebaseSignOut(auth);
         } catch (error) {
             console.error('Error signing out:', error);

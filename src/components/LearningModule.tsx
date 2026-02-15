@@ -112,7 +112,7 @@ const LearningModule = () => {
                         padding: '0.6rem 2rem'
                     }}
                 >
-                    ஸுராஹ் முல்க் - தினம் ஒரு ஆயத் மனனம் செய்வோம்
+                    {t('mulk.title')}
                 </button>
             </header>
 
