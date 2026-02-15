@@ -4,6 +4,7 @@ import { fetchQuizByDay, fetchEvidenceByDay } from '../services/quizService';
 import { saveQuizResult, getUserQuizAttempt, QuizResultRecord } from '../services/quizResultsService';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
+import { getUserProfile, updateUserProfile } from '../services/userService';
 import { Question } from '../types/quiz';
 import { ChevronLeft, ChevronRight, Trophy, Home, CheckCircle, XCircle, Search, X } from 'lucide-react';
 import GroupSelectionModal from './GroupSelectionModal';
@@ -25,7 +26,7 @@ const QuizPage = () => {
     const [saved, setSaved] = useState(false);
     const [previousResult, setPreviousResult] = useState<QuizResultRecord | null>(null);
     const [showEvidence, setShowEvidence] = useState(false);
-    const [whatsappGroup, setWhatsappGroup] = useState<string | null>(localStorage.getItem('ramadan_quiz_group'));
+    const [whatsappGroup, setWhatsappGroup] = useState<string | null>(null);
     const [showGroupModal, setShowGroupModal] = useState(false);
     const [evidence, setEvidence] = useState<any[]>([]);
 
@@ -44,7 +45,18 @@ const QuizPage = () => {
             setEvidence(dayEvidence);
 
             if (email) {
-                const existing = await getUserQuizAttempt(email, day);
+                const [existing, profile] = await Promise.all([
+                    getUserQuizAttempt(email, day),
+                    currentUser ? getUserProfile(currentUser.uid) : null
+                ]);
+
+                if (profile?.whatsappGroup) {
+                    setWhatsappGroup(profile.whatsappGroup);
+                    localStorage.setItem('ramadan_quiz_group', profile.whatsappGroup);
+                } else {
+                    setShowGroupModal(true);
+                }
+
                 if (existing) {
                     setPreviousResult(existing);
                     setLoading(false);
@@ -393,9 +405,12 @@ const QuizPage = () => {
             {(showGroupModal || !whatsappGroup) && (
                 <GroupSelectionModal
                     currentGroup={whatsappGroup || undefined}
-                    onSelect={(group) => {
+                    onSelect={async (group) => {
                         setWhatsappGroup(group);
                         localStorage.setItem('ramadan_quiz_group', group);
+                        if (currentUser) {
+                            await updateUserProfile(currentUser.uid, { whatsappGroup: group });
+                        }
                         setShowGroupModal(false);
                     }}
                 />

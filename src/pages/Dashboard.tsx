@@ -15,9 +15,10 @@ const Dashboard = () => {
     const { currentUser, isAdmin, signOut } = useAuth();
     const { t } = useLanguage();
     const navigate = useNavigate();
-    const [region, setRegion] = useState<Region | null>(getUserRegion());
+    const [region, setRegion] = useState<Region | null>(null);
     const [gulfStartDate, setGulfStartDate] = useState<string>('2026-02-18');
     const [showRegionModal, setShowRegionModal] = useState(false);
+    const [userProfile, setUserProfile] = useState<any>(null);
 
     useEffect(() => {
         const fetchConfigAndProfile = async () => {
@@ -27,11 +28,13 @@ const Dashboard = () => {
             ]);
 
             setGulfStartDate(date);
+            if (profile) setUserProfile(profile);
 
             if (profile?.region) {
-                setRegion(profile.region as Region);
-                setUserRegion(profile.region as Region);
-            } else if (!region) {
+                const verifiedRegion = profile.region as Region;
+                setRegion(verifiedRegion);
+                setUserRegion(verifiedRegion);
+            } else {
                 setShowRegionModal(true);
             }
         };
@@ -107,6 +110,29 @@ const Dashboard = () => {
                     </div>
 
                     <div className="header-right" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                        <div className="user-greeting" style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'flex-end',
+                            marginRight: '0.5rem'
+                        }}>
+                            <span style={{
+                                fontSize: '0.8rem',
+                                color: 'var(--gold-accent)',
+                                opacity: 0.8,
+                                fontWeight: 500
+                            }}>
+                                {t('common.welcome')}
+                            </span>
+                            <span style={{
+                                fontSize: '1rem',
+                                color: 'var(--text-primary)',
+                                fontWeight: 600,
+                                whiteSpace: 'nowrap'
+                            }}>
+                                {userProfile?.fullName || currentUser?.displayName || t('common.guest')}
+                            </span>
+                        </div>
                         {isAdmin && (
                             <button
                                 onClick={() => navigate('/admin')}

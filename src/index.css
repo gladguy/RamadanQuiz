@@ -242,6 +242,16 @@ body {
   gap: 1rem;
 }
 
+.user-greeting {
+  transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .user-greeting {
+    display: none !important;
+  }
+}
+
 .header-left {
   display: flex;
   align-items: center;
