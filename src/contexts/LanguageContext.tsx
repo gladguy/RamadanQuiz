@@ -30,6 +30,10 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
         localStorage.setItem('ramadan_quiz_lang', lang);
     };
 
+    useEffect(() => {
+        document.documentElement.lang = language;
+    }, [language]);
+
     const t = (key: string): string => {
         const keys = key.split('.');
         let current: any = translations[language];

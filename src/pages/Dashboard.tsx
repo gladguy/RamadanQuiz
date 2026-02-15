@@ -70,7 +70,7 @@ const Dashboard = () => {
             {/* Header */}
             <header className="dashboard-header">
                 <div className="header-content">
-                    <div className="header-left" style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+                    <div className="header-left">
                         <div className="title-area" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                             <BookOpen size={32} className="header-icon" />
                             <div>
@@ -170,7 +170,7 @@ const Dashboard = () => {
                                             <Lock size={24} />
                                         </div>
                                     )}
-                                    <div className="day-number"><span className="day-label">{t('dashboard.day_label')}</span> {day}</div>
+                                    <div className="day-number"><span className="day-label metallic-gold-text">{t('dashboard.day_label')}</span> {day}</div>
                                     {unlocked && (
                                         <div className="day-status">{t('dashboard.day_ready')}</div>
                                     )}

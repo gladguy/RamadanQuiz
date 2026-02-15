@@ -131,6 +131,15 @@ body {
   background-clip: text;
 }
 
+.metallic-gold-text {
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 800;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
 .hero-subtitle {
   font-size: 1.5rem;
   color: var(--text-secondary);
@@ -230,6 +239,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 1rem;
 }
 
 .header-left {
@@ -564,6 +574,37 @@ body {
 
   .day-number {
     font-size: 1.5rem;
+  }
+
+  .header-content {
+    flex-direction: column;
+    padding: 0.5rem 0;
+    gap: 0.8rem;
+  }
+
+  .header-left {
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .header-right {
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem !important;
+  }
+
+  .region-display,
+  .language-selector,
+  .signout-btn {
+    padding: 0.3rem 0.6rem !important;
+    font-size: 0.85rem !important;
+  }
+
+  .header-title {
+    font-size: 1.2rem;
+    text-align: center;
   }
 }
 

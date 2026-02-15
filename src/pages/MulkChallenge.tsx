@@ -134,7 +134,7 @@ const MulkChallenge = () => {
                         <span className="desktop-only">{t('common.back')}</span>
                     </button>
                     <h1 className="learning-title" style={{ margin: 0 }}>
-                        ஸுராஹ் முல்க் - தினம் ஒரு ஆயத் மனனம் செய்வோம் (Day {currentDay})
+                        ஸுராஹ் முல்க் - தினம் ஒரு ஆயத் மனனம் செய்வோம் (<span className="metallic-gold-text">Ramadan</span> {currentDay})
                     </h1>
                 </div>
             </header>

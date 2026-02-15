@@ -32,7 +32,7 @@ export const translations = {
         dashboard: {
             title_desktop: 'ரமழான் 2026 (ஹிஜிரி 1447) - குர்ஆன் கேள்வி பதில்',
             title_mobile: 'ரமழான் கேள்வி பதில்',
-            day_label: 'நோன்பு',
+            day_label: 'ரமழான்',
             day_ready: 'தயாராக உள்ளது',
             try_lesson: 'பாடப் பயிற்சி (Trial)',
             leaderboard_title: 'முன்னணி வீரர்கள்',
@@ -85,7 +85,7 @@ export const translations = {
         dashboard: {
             title_desktop: 'Ramadan 2026 (Hijri 1447) - Quran Quiz',
             title_mobile: 'Ramadan Quiz',
-            day_label: 'Day',
+            day_label: 'Ramadan',
             day_ready: 'Ready',
             try_lesson: 'Try Lesson (Trial)',
             leaderboard_title: 'Leaderboard',
