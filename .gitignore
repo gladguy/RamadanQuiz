@@ -14,6 +14,8 @@ dist-ssr
 .env
 *.pdf
 *.docx
+*.zip
+*.rules
 
 # Editor directories and files
 .vscode/*

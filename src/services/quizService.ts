@@ -1,182 +1,69 @@
 import { Question } from '../types/quiz';
-import { getMockQuizForDay0 } from './Quiz/Quiz-0';
-import { getMockQuizForDay1 } from './Quiz/Quiz-1';
-import { getMockQuizForDay2 } from './Quiz/Quiz-2';
-import { getMockQuizForDay3 } from './Quiz/Quiz-3';
-import { getMockQuizForDay4 } from './Quiz/Quiz-4';
-import { getMockQuizForDay5 } from './Quiz/Quiz-5';
-import { getMockQuizForDay6 } from './Quiz/Quiz-6';
-import { getMockQuizForDay7 } from './Quiz/Quiz-7';
-import { getMockQuizForDay8 } from './Quiz/Quiz-8';
-import { getMockQuizForDay9 } from './Quiz/Quiz-9';
-import { getMockQuizForDay10 } from './Quiz/Quiz-10';
-import { getMockQuizForDay11 } from './Quiz/Quiz-11';
-import { getMockQuizForDay12 } from './Quiz/Quiz-12';
-import { getMockQuizForDay13 } from './Quiz/Quiz-13';
-import { getMockQuizForDay14 } from './Quiz/Quiz-14';
-import { getMockQuizForDay15 } from './Quiz/Quiz-15';
-import { getMockQuizForDay16 } from './Quiz/Quiz-16';
-import { getMockQuizForDay17 } from './Quiz/Quiz-17';
-import { getMockQuizForDay18 } from './Quiz/Quiz-18';
-import { getMockQuizForDay19 } from './Quiz/Quiz-19';
-import { getMockQuizForDay20 } from './Quiz/Quiz-20';
-import { getMockQuizForDay21 } from './Quiz/Quiz-21';
-import { getMockQuizForDay22 } from './Quiz/Quiz-22';
-import { getMockQuizForDay23 } from './Quiz/Quiz-23';
-import { getMockQuizForDay24 } from './Quiz/Quiz-24';
-import { getMockQuizForDay25 } from './Quiz/Quiz-25';
-import { getMockQuizForDay26 } from './Quiz/Quiz-26';
-import { getMockQuizForDay27 } from './Quiz/Quiz-27';
-import { getMockQuizForDay28 } from './Quiz/Quiz-28';
-import { getMockQuizForDay29 } from './Quiz/Quiz-29';
-import { getMockQuizForDay30 } from './Quiz/Quiz-30';
 
 /**
  * Explicit answer key for all 30 days (Juz 1–30).
- * Each day maps question number (1–5) to the correct option label (A/B/C/D).
- * Answers determined by careful analysis of the slide content in each Quiz file.
  */
 const QUIZ_ANSWER_KEY: Record<number, Record<number, string>> = {
-    // Day 0 – Pre-Ramadan Trial: Al-Fatiha & Al-Baqarah
     0: { 1: 'B', 2: 'C', 3: 'B', 4: 'B', 5: 'C' },
-    // Day 1 – Juz 1: Al-Fatiha & Al-Baqarah
     1: { 1: 'B', 2: 'C', 3: 'B', 4: 'B', 5: 'B' },
-    // Day 2 – Juz 2: Al-Baqarah (cont.)
     2: { 1: 'B', 2: 'C', 3: 'C', 4: 'B', 5: 'C' },
-    // Day 3 – Juz 3: Al-Baqarah & Aal-Imran
     3: { 1: 'B', 2: 'D', 3: 'B', 4: 'C', 5: 'B' },
-    // Day 4 – Juz 4: Aal-Imran & An-Nisa
     4: { 1: 'C', 2: 'C', 3: 'A', 4: 'B', 5: 'C' },
-    // Day 5 – Juz 5: An-Nisa & Al-Ma'idah
     5: { 1: 'C', 2: 'C', 3: 'B', 4: 'C', 5: 'B' },
-    // Day 6 – Juz 6: An-Nisa & Al-Ma'idah (cont.)
     6: { 1: 'B', 2: 'B', 3: 'C', 4: 'B', 5: 'B' },
-    // Day 7 – Juz 7: Al-Ma'idah & Al-An'am
     7: { 1: 'B', 2: 'B', 3: 'B', 4: 'C', 5: 'A' },
-    // Day 8 – Juz 8: Al-An'am & Al-A'raf
     8: { 1: 'C', 2: 'B', 3: 'C', 4: 'C', 5: 'A' },
-    // Day 9 – Juz 9: Al-A'raf & Al-Anfal
     9: { 1: 'C', 2: 'B', 3: 'B', 4: 'B', 5: 'C' },
-    // Day 10 – Juz 10: Al-Anfal & At-Tawbah
     10: { 1: 'B', 2: 'B', 3: 'B', 4: 'B', 5: 'B' },
-    // Day 11 – Juz 11: At-Tawbah & Hud
     11: { 1: 'B', 2: 'B', 3: 'B', 4: 'B', 5: 'B' },
-    // Day 12 – Juz 12: Hud & Yusuf
     12: { 1: 'C', 2: 'B', 3: 'B', 4: 'D', 5: 'C' },
-    // Day 13 – Juz 13: Yusuf, Ar-Ra'd & Ibrahim
     13: { 1: 'C', 2: 'B', 3: 'C', 4: 'C', 5: 'B' },
-    // Day 14 – Juz 14: Al-Hijr & An-Nahl
     14: { 1: 'C', 2: 'B', 3: 'B', 4: 'B', 5: 'B' },
-    // Day 15 – Juz 15: Al-Isra & Al-Kahf
     15: { 1: 'B', 2: 'B', 3: 'C', 4: 'B', 5: 'B' },
-    // Day 16 – Juz 16: Al-Kahf, Maryam & Taha
     16: { 1: 'B', 2: 'C', 3: 'B', 4: 'B', 5: 'C' },
-    // Day 17 – Juz 17: Al-Anbiya & Al-Hajj
     17: { 1: 'C', 2: 'B', 3: 'A', 4: 'C', 5: 'C' },
-    // Day 18 – Juz 18: Al-Mu'minun, An-Nur & Al-Furqan
     18: { 1: 'B', 2: 'B', 3: 'B', 4: 'D', 5: 'B' },
-    // Day 19 – Juz 19: Al-Furqan, Ash-Shu'ara & An-Naml
     19: { 1: 'B', 2: 'B', 3: 'C', 4: 'B', 5: 'C' },
-    // Day 20 – Juz 20: An-Naml, Al-Qasas & Al-Ankabut
     20: { 1: 'C', 2: 'C', 3: 'B', 4: 'B', 5: 'C' },
-    // Day 21 – Juz 21: Al-Ankabut, Ar-Rum, Luqman, As-Sajdah & Al-Ahzab
     21: { 1: 'B', 2: 'C', 3: 'D', 4: 'B', 5: 'C' },
-    // Day 22 – Juz 22: Al-Ahzab, Saba, Fatir & Ya-Sin
     22: { 1: 'C', 2: 'C', 3: 'B', 4: 'B', 5: 'C' },
-    // Day 23 – Juz 23: Ya-Sin, As-Saffat, Sad & Az-Zumar
     23: { 1: 'B', 2: 'C', 3: 'C', 4: 'B', 5: 'B' },
-    // Day 24 – Juz 24: Az-Zumar, Ghafir & Fussilat
     24: { 1: 'B', 2: 'B', 3: 'B', 4: 'A', 5: 'C' },
-    // Day 25 – Juz 25: Fussilat, Ash-Shura, Az-Zukhruf, Ad-Dukhan & Al-Jathiyah
     25: { 1: 'C', 2: 'B', 3: 'B', 4: 'C', 5: 'B' },
-    // Day 26 – Juz 26: Al-Ahqaf, Muhammad, Al-Fath, Al-Hujurat & Qaf
     26: { 1: 'C', 2: 'B', 3: 'C', 4: 'C', 5: 'B' },
-    // Day 27 – Juz 27: Adh-Dhariyat, At-Tur, An-Najm, Al-Qamar, Ar-Rahman, Al-Waqi'ah & Al-Hadid
     27: { 1: 'C', 2: 'B', 3: 'B', 4: 'C', 5: 'C' },
-    // Day 28 – Juz 28: Al-Mujadila to At-Tahrim
     28: { 1: 'C', 2: 'B', 3: 'C', 4: 'C', 5: 'B' },
-    // Day 29 – Juz 29: Al-Mulk to Al-Mursalat
     29: { 1: 'B', 2: 'C', 3: 'C', 4: 'B', 5: 'B' },
-    // Day 30 – Juz 30 (Juz Amma): An-Naba to An-Nas
     30: { 1: 'B', 2: 'B', 3: 'C', 4: 'B', 5: 'B' },
 };
+
+// Eagerly load all quiz files from the content directory
+const quizFiles = import.meta.glob('../content/*/quiz/Quiz-*.ts', { eager: true });
 
 /**
  * Fetch raw quiz content for a specific day and language
  */
 const fetchRawQuizContent = (dayNumber: number, language: string = 'ta'): string => {
-    // For now, only Day 0 has English content as a proof of concept
-    if (language === 'en' && dayNumber === 0) {
-        return `1. What is the special meaning of Allah's name 'Ar-Raheem'?
-A) Meriful to all creation
-B) Especially merciful to the believers  
-C) The One who punishes
-D) The One who provides wealth
+    try {
+        const path = `../content/${language}/quiz/Quiz-${dayNumber}.ts`;
+        const module = quizFiles[path] as any;
 
-2. Who are the 'Muttaqin' mentioned in Surah Al-Baqarah?
-A) Those who speak a lot
-B) Those who only save wealth
-C) Those who believe in the unseen, establish prayer, and spend from what We have provided  
-D) Those who believe in nothing
+        if (!module) {
+            console.warn(`Quiz content not found for Day ${dayNumber} (${language}) at ${path}`);
+            return '';
+        }
 
-3. What did Allah teach Adam (AS)?
-A) Arts of war
-B) Names of all things  
-C) Farming
-D) Trading
+        const quizFn = module[`getMockQuizForDay${dayNumber}`] ||
+            module.getMockQuizForDay100 || // legacy link
+            module.default;
 
-4. When the angels prostrated to Adam, who refused to do so?
-A) Jibreel
-B) Iblees  
-C) Mikaeel
-D) Israfeel
-
-5. Who built the Kaabah (House of Allah)?
-A) Musa and Isa
-B) Adam and Nuh
-C) Ibrahim and Ismail  
-D) Dawud and Sulaiman`;
+        if (!quizFn) return '';
+        const slides = typeof quizFn === 'function' ? quizFn() : quizFn;
+        return slides.length > 0 ? slides[0].content : '';
+    } catch (error) {
+        console.error(`Error loading quiz for Day ${dayNumber} (${language}):`, error);
+        return '';
     }
-
-    const quizMap: Record<number, () => { content: string }[]> = {
-        0: getMockQuizForDay0,
-        1: getMockQuizForDay1,
-        2: getMockQuizForDay2,
-        3: getMockQuizForDay3,
-        4: getMockQuizForDay4,
-        5: getMockQuizForDay5,
-        6: getMockQuizForDay6,
-        7: getMockQuizForDay7,
-        8: getMockQuizForDay8,
-        9: getMockQuizForDay9,
-        10: getMockQuizForDay10,
-        11: getMockQuizForDay11,
-        12: getMockQuizForDay12,
-        13: getMockQuizForDay13,
-        14: getMockQuizForDay14,
-        15: getMockQuizForDay15,
-        16: getMockQuizForDay16,
-        17: getMockQuizForDay17,
-        18: getMockQuizForDay18,
-        19: getMockQuizForDay19,
-        20: getMockQuizForDay20,
-        21: getMockQuizForDay21,
-        22: getMockQuizForDay22,
-        23: getMockQuizForDay23,
-        24: getMockQuizForDay24,
-        25: getMockQuizForDay25,
-        26: getMockQuizForDay26,
-        27: getMockQuizForDay27,
-        28: getMockQuizForDay28,
-        29: getMockQuizForDay29,
-        30: getMockQuizForDay30,
-    };
-
-    const quizFn = quizMap[dayNumber];
-    if (!quizFn) return '';
-
-    const slides = quizFn();
-    return slides.length > 0 ? slides[0].content : '';
 };
 
 /**
@@ -328,18 +215,39 @@ const shuffleQuestionOptions = (questions: Question[]): Question[] => {
     });
 };
 
+// Eagerly load all evidence files from the content directory
+const evidenceFiles = import.meta.glob('../content/*/quiz/Evidence.ts', { eager: true });
+
+/**
+ * Fetch evidence for a specific day and language.
+ */
+export const fetchEvidenceByDay = (dayNumber: number, language: string = 'ta'): any[] => {
+    try {
+        const path = `../content/${language}/quiz/Evidence.ts`;
+        const module = evidenceFiles[path] as any;
+
+        if (!module) {
+            console.warn(`Evidence content not found for (${language}) at ${path}`);
+            return [];
+        }
+
+        const evidence = module.QUIZ_EVIDENCE || module.default;
+        return evidence[dayNumber] || [];
+    } catch (error) {
+        console.error(`Error loading evidence for Day ${dayNumber} (${language}):`, error);
+        return [];
+    }
+};
+
 /**
  * Fetch and parse quiz for a specific day and language.
- * Applies the explicit QUIZ_ANSWER_KEY to set correct answers reliably,
- * then shuffles options randomly so the correct answer appears in a
- * different position on every attempt.
  */
 export const fetchQuizByDay = (dayNumber: number, language: string = 'ta'): Question[] => {
     const rawContent = fetchRawQuizContent(dayNumber, language);
     if (!rawContent) return [];
     const questions = parseQuizContent(rawContent);
 
-    // Apply explicit answer key (overrides unreliable double-space detection)
+    // Apply explicit answer key
     const answerKey = QUIZ_ANSWER_KEY[dayNumber];
     if (answerKey) {
         questions.forEach(q => {

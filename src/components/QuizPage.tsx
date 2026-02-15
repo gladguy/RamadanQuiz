@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { fetchQuizByDay } from '../services/quizService';
+import { fetchQuizByDay, fetchEvidenceByDay } from '../services/quizService';
 import { saveQuizResult, getUserQuizAttempt, QuizResultRecord } from '../services/quizResultsService';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Question } from '../types/quiz';
 import { ChevronLeft, ChevronRight, Trophy, Home, CheckCircle, XCircle, Search, X } from 'lucide-react';
-import { QUIZ_EVIDENCE } from '../services/Quiz/Evidence';
 import GroupSelectionModal from './GroupSelectionModal';
 
 const QuizPage = () => {
@@ -28,17 +27,16 @@ const QuizPage = () => {
     const [showEvidence, setShowEvidence] = useState(false);
     const [whatsappGroup, setWhatsappGroup] = useState<string | null>(localStorage.getItem('ramadan_quiz_group'));
     const [showGroupModal, setShowGroupModal] = useState(false);
+    const [evidence, setEvidence] = useState<any[]>([]);
 
     useEffect(() => {
         if (!dayNumber) return;
-        // Wait for auth to finish loading before checking Firestore
         if (authLoading) return;
 
         const day = parseInt(dayNumber);
         const email = currentUser?.email;
 
         const loadQuiz = async () => {
-            // Check if user has already attempted this day's quiz
             if (email) {
                 const existing = await getUserQuizAttempt(email, day);
                 if (existing) {
@@ -54,11 +52,15 @@ const QuizPage = () => {
             } else {
                 setError(t('common.error'));
             }
+
+            const dayEvidence = fetchEvidenceByDay(day, language);
+            setEvidence(dayEvidence);
+
             setLoading(false);
         };
 
         loadQuiz();
-    }, [dayNumber, currentUser, authLoading]);
+    }, [dayNumber, currentUser, authLoading, language]);
 
     const currentQuestion = questions[currentIndex];
     const isAnswered = currentQuestion && selectedAnswers[currentQuestion.id] !== undefined;
@@ -66,14 +68,13 @@ const QuizPage = () => {
     const isLastQuestion = currentIndex === questions.length - 1;
 
     const handleSelectOption = (label: string) => {
-        if (isRevealed) return; // Can't change after reveal
+        if (isRevealed) return;
 
         setSelectedAnswers(prev => ({
             ...prev,
             [currentQuestion.id]: label,
         }));
 
-        // Auto-reveal after selection
         setTimeout(() => {
             setRevealed(prev => ({
                 ...prev,
@@ -97,7 +98,6 @@ const QuizPage = () => {
     const handleShowResults = async () => {
         setShowResult(true);
 
-        // Save results to Firebase
         const score = getScore();
         const email = currentUser?.email || 'unknown';
         const day = parseInt(dayNumber || '0');
@@ -120,8 +120,6 @@ const QuizPage = () => {
             setSaving(false);
         }
     };
-
-    // No retry allowed — each user gets only one attempt per day
 
     const getScore = () => {
         let correct = 0;
@@ -157,11 +155,10 @@ const QuizPage = () => {
         );
     }
 
-    // Already attempted — show previous result
     if (previousResult) {
         const { score, totalQuestions, percentage } = previousResult;
         const emoji = percentage >= 80 ? '🌟' : percentage >= 60 ? '👍' : percentage >= 40 ? '📖' : '💪';
-        const attemptDate = new Date(previousResult.dateAttempted).toLocaleDateString('ta-IN', {
+        const attemptDate = new Date(previousResult.dateAttempted).toLocaleDateString(language === 'ta' ? 'ta-IN' : 'en-US', {
             year: 'numeric', month: 'long', day: 'numeric',
             hour: '2-digit', minute: '2-digit'
         });
@@ -195,6 +192,33 @@ const QuizPage = () => {
                         </button>
                     </div>
                 </div>
+
+                {showEvidence && (
+                    <div className="evidence-modal-overlay" onClick={() => setShowEvidence(false)}>
+                        <div className="evidence-modal" onClick={e => e.stopPropagation()}>
+                            <div className="evidence-header">
+                                <h2>{t('quiz.evidence_title')}</h2>
+                                <button className="close-btn" onClick={() => setShowEvidence(false)}>
+                                    <X size={24} />
+                                </button>
+                            </div>
+                            <div className="evidence-content">
+                                {evidence.map((item, idx) => (
+                                    <div key={idx} className="evidence-item">
+                                        <div className="evidence-q">{idx + 1}. {item.q}</div>
+                                        <div className="evidence-a">
+                                            <strong>{language === 'ta' ? 'பதில்:' : 'Answer:'}</strong>
+                                            <span>{item.a}</span>
+                                        </div>
+                                        <div className="evidence-p">
+                                            {item.p}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         );
     }
@@ -213,7 +237,6 @@ const QuizPage = () => {
         );
     }
 
-    // Results Screen
     if (showResult) {
         const score = getScore();
         const percentage = Math.round((score / questions.length) * 100);
@@ -253,7 +276,6 @@ const QuizPage = () => {
                     </div>
                 </div>
 
-                {/* Evidence Modal */}
                 {showEvidence && (
                     <div className="evidence-modal-overlay" onClick={() => setShowEvidence(false)}>
                         <div className="evidence-modal" onClick={e => e.stopPropagation()}>
@@ -264,11 +286,11 @@ const QuizPage = () => {
                                 </button>
                             </div>
                             <div className="evidence-content">
-                                {QUIZ_EVIDENCE[dayNumber ? parseInt(dayNumber) : 0]?.map((item, idx) => (
+                                {evidence.map((item, idx) => (
                                     <div key={idx} className="evidence-item">
                                         <div className="evidence-q">{idx + 1}. {item.q}</div>
                                         <div className="evidence-a">
-                                            <strong>பதில்:</strong>
+                                            <strong>{language === 'ta' ? 'பதில்:' : 'Answer:'}</strong>
                                             <span>{item.a}</span>
                                         </div>
                                         <div className="evidence-p">
@@ -284,10 +306,8 @@ const QuizPage = () => {
         );
     }
 
-    // Quiz Question Screen
     return (
         <div className="quiz-page-container">
-            {/* Header */}
             <header className="quiz-header">
                 <button onClick={() => navigate(`/learn/${dayNumber}`)} className="back-button">
                     <ChevronLeft size={20} />
@@ -298,7 +318,6 @@ const QuizPage = () => {
                 </h1>
             </header>
 
-            {/* Progress */}
             <div className="quiz-progress">
                 <span className="quiz-progress-text">
                     {t('quiz.question')} {currentIndex + 1} / {questions.length}
@@ -311,7 +330,6 @@ const QuizPage = () => {
                 </div>
             </div>
 
-            {/* Question Card */}
             <div className="quiz-question-card">
                 <h3 className="quiz-question-text">
                     <span className="question-number">{currentQuestion.id}.</span>
@@ -324,7 +342,7 @@ const QuizPage = () => {
                             key={option.label}
                             className={`quiz-option-btn ${getOptionClass(option.label)}`}
                             onClick={() => handleSelectOption(option.label)}
-                            disabled={isRevealed as boolean}
+                            disabled={isRevealed}
                         >
                             <span className="option-label">{option.label}</span>
                             <span className="option-text">{option.text}</span>
@@ -339,7 +357,6 @@ const QuizPage = () => {
                 </div>
             </div>
 
-            {/* Navigation */}
             <div className="quiz-navigation">
                 <button
                     onClick={handlePrev}
@@ -356,7 +373,7 @@ const QuizPage = () => {
                         className="quiz-button enabled"
                     >
                         <Trophy size={24} />
-                        <span>முடிவைக் காண</span>
+                        <span>{t('quiz.show_results')}</span>
                     </button>
                 ) : (
                     <button
@@ -370,7 +387,6 @@ const QuizPage = () => {
                 )}
             </div>
 
-            {/* Group Selection Modal */}
             {(showGroupModal || !whatsappGroup) && (
                 <GroupSelectionModal
                     currentGroup={whatsappGroup || undefined}

@@ -93,8 +93,8 @@ export const getLeaderboard = async (topN: number = 3, groupName?: string): Prom
 
         snapshot.docs.forEach(doc => {
             const data = doc.data() as QuizResultRecord;
-            // Exclude admin
-            if (data.userEmail === adminEmail) return;
+            // Exclude admin and Trial Lesson (Day 0)
+            if (data.userEmail === adminEmail || data.dayNumber === 0) return;
 
             if (!userMap[data.userEmail]) {
                 userMap[data.userEmail] = { totalScore: 0, totalQuestions: 0, quizzesTaken: 0 };

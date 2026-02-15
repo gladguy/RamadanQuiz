@@ -64,7 +64,7 @@ export const translations = {
             save: 'Save',
             cancel: 'Cancel',
             admin: 'Admin',
-            signout: 'Sign Out',
+            signout: 'Log Out',
             welcome: 'Welcome',
             guest: 'Friend',
         },

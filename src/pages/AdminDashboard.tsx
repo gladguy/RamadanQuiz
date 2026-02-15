@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { getWhatsAppGroups, addWhatsAppGroup, deleteWhatsAppGroup, WhatsAppGroup } from '../services/whatsappGroupsService';
 import { getAllQuizResultsForAdmin, QuizResultRecord } from '../services/quizResultsService';
-import { Users, Plus, Trash2, Search, Calendar, Trophy, ChevronLeft } from 'lucide-react';
+import { getGulfStartDate, updateGulfStartDate } from '../services/appConfigService';
+import { Users, Plus, Trash2, Search, Calendar, Trophy, ChevronLeft, Settings } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const AdminDashboard = () => {
@@ -10,17 +11,21 @@ const AdminDashboard = () => {
     const [results, setResults] = useState<QuizResultRecord[]>([]);
     const [newGroupName, setNewGroupName] = useState('');
     const [selectedGroup, setSelectedGroup] = useState<string>('');
+    const [gulfStartDate, setGulfStartDate] = useState<string>('2026-02-18');
+    const [isUpdatingDate, setIsUpdatingDate] = useState(false);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const loadInitialData = async () => {
             try {
-                const [fetchedGroups, fetchedResults] = await Promise.all([
+                const [fetchedGroups, fetchedResults, fetchedDate] = await Promise.all([
                     getWhatsAppGroups(),
-                    getAllQuizResultsForAdmin()
+                    getAllQuizResultsForAdmin(),
+                    getGulfStartDate()
                 ]);
                 setGroups(fetchedGroups);
                 setResults(fetchedResults);
+                setGulfStartDate(fetchedDate);
             } catch (error) {
                 console.error('Error loading admin data:', error);
             } finally {
@@ -29,6 +34,18 @@ const AdminDashboard = () => {
         };
         loadInitialData();
     }, []);
+
+    const handleUpdateDate = async () => {
+        try {
+            setIsUpdatingDate(true);
+            await updateGulfStartDate(gulfStartDate);
+            alert('Ramadan start date updated successfully!');
+        } catch (error) {
+            alert('Error updating date');
+        } finally {
+            setIsUpdatingDate(false);
+        }
+    };
 
     const handleAddGroup = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -100,6 +117,41 @@ const AdminDashboard = () => {
                                 </button>
                             </div>
                         ))}
+                    </div>
+                </section>
+
+                {/* Column 2 (Mobile Shifted): Ramadan Configuration */}
+                <section className="admin-section" style={{ background: 'var(--surface)', padding: '1.5rem', borderRadius: '20px', border: '1px solid var(--border)', marginTop: '1rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
+                        <Settings size={24} style={{ color: 'var(--gold-accent)' }} />
+                        <h2 style={{ fontSize: '1.25rem' }}>ரம்ஜான் உள்ளமைவு (Ramadan Config)</h2>
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                        <div>
+                            <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+                                வளைகுடா நாடுகளுக்கான ரமலான் தொடக்க தேதி (Gulf Start Date):
+                            </label>
+                            <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                <input
+                                    type="date"
+                                    value={gulfStartDate}
+                                    onChange={(e) => setGulfStartDate(e.target.value)}
+                                    style={{ flex: 1, padding: '0.75rem', borderRadius: '12px', border: '1px solid var(--border)', background: 'var(--surface-light)', color: 'white' }}
+                                />
+                                <button
+                                    onClick={handleUpdateDate}
+                                    disabled={isUpdatingDate}
+                                    style={{ padding: '0.75rem 1.5rem', borderRadius: '12px', border: 'none', background: 'var(--primary-gradient)', color: 'white', cursor: 'pointer', fontWeight: 'bold' }}
+                                >
+                                    {isUpdatingDate ? 'Updating...' : 'Save'}
+                                </button>
+                            </div>
+                            <p style={{ marginTop: '0.8rem', fontSize: '0.85rem', color: 'var(--gold-accent)', opacity: 0.8 }}>
+                                <Calendar size={14} style={{ display: 'inline', marginRight: '4px', verticalAlign: 'middle' }} />
+                                மற்ற நாடுகள் இந்த தேதியிலிருந்து 1 நாள் தாமதமாகும்.
+                            </p>
+                        </div>
                     </div>
                 </section>
 

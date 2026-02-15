@@ -8,7 +8,22 @@ export interface UserProfile {
     displayName: string;
     fullName: string;
     lastSeen: string;
+    region?: string;
 }
+
+/**
+ * Update user profile with partial data.
+ */
+export const updateUserProfile = async (uid: string, updates: Partial<UserProfile>): Promise<void> => {
+    try {
+        const userDocRef = doc(db, 'quizUsers', uid);
+        await setDoc(userDocRef, updates, { merge: true });
+        console.log(`✅ User profile updated for ${uid}`);
+    } catch (error) {
+        console.error('❌ Error updating user profile:', error);
+        throw error;
+    }
+};
 
 /**
  * Sync user profile to Firestore. 

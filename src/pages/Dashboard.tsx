@@ -5,21 +5,49 @@ import { Lock, BookOpen, LogOut, Globe, Shield } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Leaderboard from '../components/Leaderboard';
 import LanguageToggle from '../components/LanguageToggle';
-import { getUserRegion, setUserRegion, REGION_CONFIGS, Region } from '../services/regionService';
-import { useState } from 'react';
+import { getUserRegion, setUserRegion, REGION_CONFIGS, Region, getRegionalStartDate } from '../services/regionService';
+import { getGulfStartDate } from '../services/appConfigService';
+import { getUserProfile, updateUserProfile } from '../services/userService';
+import RegionSelectionModal from '../components/RegionSelectionModal';
+import { useState, useEffect } from 'react';
 
 const Dashboard = () => {
     const { currentUser, isAdmin, signOut } = useAuth();
     const { t } = useLanguage();
     const navigate = useNavigate();
-    const [region, setRegion] = useState<Region>(getUserRegion());
+    const [region, setRegion] = useState<Region | null>(getUserRegion());
+    const [gulfStartDate, setGulfStartDate] = useState<string>('2026-02-18');
+    const [showRegionModal, setShowRegionModal] = useState(false);
 
-    const handleRegionChange = (newRegion: Region) => {
-        setRegion(newRegion);
-        setUserRegion(newRegion);
+    useEffect(() => {
+        const fetchConfigAndProfile = async () => {
+            const [date, profile] = await Promise.all([
+                getGulfStartDate(),
+                currentUser ? getUserProfile(currentUser.uid) : null
+            ]);
+
+            setGulfStartDate(date);
+
+            if (profile?.region) {
+                setRegion(profile.region as Region);
+                setUserRegion(profile.region as Region);
+            } else if (!region) {
+                setShowRegionModal(true);
+            }
+        };
+        fetchConfigAndProfile();
+    }, [currentUser]);
+
+    const handleRegionSelect = async (selectedRegion: Region) => {
+        if (currentUser) {
+            await updateUserProfile(currentUser.uid, { region: selectedRegion });
+            setRegion(selectedRegion);
+            setUserRegion(selectedRegion);
+            setShowRegionModal(false);
+        }
     };
 
-    const currentStartDate = REGION_CONFIGS[region].startDate;
+    const currentStartDate = region ? getRegionalStartDate(gulfStartDate, region) : gulfStartDate;
 
     const handleSignOut = async () => {
         try {
@@ -50,27 +78,27 @@ const Dashboard = () => {
                                     <span className="desktop-only">{t('dashboard.title_desktop')}</span>
                                     <span className="mobile-only">{t('dashboard.title_mobile')}</span>
                                 </h1>
-                                <p className="header-subtitle">
-                                    {t('common.welcome')}, {currentUser?.displayName || t('common.guest')}!
-                                </p>
                             </div>
                         </div>
 
-                        <div className="region-selector" style={{ display: 'flex', alignItems: 'center', background: 'var(--surface-light)', padding: '0.4rem 0.6rem', borderRadius: '20px', border: '1px solid var(--border)' }}>
-                            <select
-                                value={region}
-                                onChange={(e) => handleRegionChange(e.target.value as Region)}
-                                style={{ background: 'none', border: 'none', color: 'var(--text-primary)', cursor: 'pointer', outline: 'none', fontSize: '1.2rem', appearance: 'none' }}
-                            >
-                                {Object.entries(REGION_CONFIGS).map(([key, config]) => (
-                                    <option key={key} value={key} style={{ background: 'var(--surface)', color: 'white', fontSize: '1rem' }}>
-                                        {config.flag} {config.name}
-                                    </option>
-                                ))}
-                            </select>
-                            <div style={{ pointerEvents: 'none', marginLeft: '-0.3rem', color: 'var(--gold-accent)', fontSize: '0.8rem' }}>▼</div>
-                        </div>
+                        {region && (
+                            <div className="region-display" style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.5rem',
+                                background: 'var(--surface-light)',
+                                padding: '0.4rem 0.8rem',
+                                borderRadius: '20px',
+                                border: '1px solid var(--gold-accent)',
+                                color: 'var(--text-primary)',
+                                fontSize: '1rem'
+                            }}>
+                                <span style={{ fontSize: '1.2rem' }}>{REGION_CONFIGS[region].flag}</span>
+                                <span>{REGION_CONFIGS[region].name}</span>
+                            </div>
+                        )}
                     </div>
+
                     <div className="header-right" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                         {isAdmin && (
                             <button
@@ -155,6 +183,8 @@ const Dashboard = () => {
                     })}
                 </div>
             </main>
+
+            {showRegionModal && <RegionSelectionModal onSelect={handleRegionSelect} />}
         </div>
     );
 };

@@ -6,42 +6,56 @@ export type Region =
 export interface RegionConfig {
     name: string;
     flag: string;
-    startDate: string; // YYYY-MM-DD
+    isGulf: boolean;
 }
 
 export const REGION_CONFIGS: Record<Region, RegionConfig> = {
-    'IN': { name: 'India', flag: '🇮🇳', startDate: '2026-02-19' },
-    'UAE': { name: 'UAE', flag: '🇦🇪', startDate: '2026-02-18' },
-    'SA': { name: 'Saudi Arabia', flag: '🇸🇦', startDate: '2026-02-18' },
-    'QA': { name: 'Qatar', flag: '🇶🇦', startDate: '2026-02-18' },
-    'KW': { name: 'Kuwait', flag: '🇰🇼', startDate: '2026-02-18' },
-    'OM': { name: 'Oman', flag: '🇴🇲', startDate: '2026-02-18' },
-    'BH': { name: 'Bahrain', flag: '🇧🇭', startDate: '2026-02-18' },
-    'US': { name: 'USA', flag: '🇺🇸', startDate: '2026-02-18' },
-    'UK': { name: 'UK', flag: '🇬🇧', startDate: '2026-02-18' },
-    'CA': { name: 'Canada', flag: '🇨🇦', startDate: '2026-02-18' },
-    'AU': { name: 'Australia', flag: '🇦🇺', startDate: '2026-02-18' },
-    'PK': { name: 'Pakistan', flag: '🇵🇰', startDate: '2026-02-19' },
-    'BD': { name: 'Bangladesh', flag: '🇧🇩', startDate: '2026-02-19' },
-    'LK': { name: 'Sri Lanka', flag: '🇱🇰', startDate: '2026-02-19' },
-    'MY': { name: 'Malaysia', flag: '🇲🇾', startDate: '2026-02-19' },
-    'SG': { name: 'Singapore', flag: '🇸🇬', startDate: '2026-02-19' },
-    'EG': { name: 'Egypt', flag: '🇪🇬', startDate: '2026-02-18' },
-    'JO': { name: 'Jordan', flag: '🇯🇴', startDate: '2026-02-18' },
-    'LB': { name: 'Lebanon', flag: '🇱🇧', startDate: '2026-02-18' },
-    'TR': { name: 'Turkey', flag: '🇹🇷', startDate: '2026-02-18' },
-    'ID': { name: 'Indonesia', flag: '🇮🇩', startDate: '2026-02-19' },
+    'IN': { name: 'India', flag: '🇮🇳', isGulf: false },
+    'UAE': { name: 'UAE', flag: '🇦🇪', isGulf: true },
+    'SA': { name: 'Saudi Arabia', flag: '🇸🇦', isGulf: true },
+    'QA': { name: 'Qatar', flag: '🇶🇦', isGulf: true },
+    'KW': { name: 'Kuwait', flag: '🇰🇼', isGulf: true },
+    'OM': { name: 'Oman', flag: '🇴🇲', isGulf: true },
+    'BH': { name: 'Bahrain', flag: '🇧🇭', isGulf: true },
+    'US': { name: 'USA', flag: '🇺🇸', isGulf: true }, // Assuming US follows Gulf/Mainstream? User said "Gulf countries" vs "Rest of the world". I'll treat non-Gulf as lagged.
+    'UK': { name: 'UK', flag: '🇬🇧', isGulf: true },
+    'CA': { name: 'Canada', flag: '🇨🇦', isGulf: true },
+    'AU': { name: 'Australia', flag: '🇦🇺', isGulf: true },
+    'PK': { name: 'Pakistan', flag: '🇵🇰', isGulf: false },
+    'BD': { name: 'Bangladesh', flag: '🇧🇩', isGulf: false },
+    'LK': { name: 'Sri Lanka', flag: '🇱🇰', isGulf: false },
+    'MY': { name: 'Malaysia', flag: '🇲🇾', isGulf: false },
+    'SG': { name: 'Singapore', flag: '🇸🇬', isGulf: false },
+    'EG': { name: 'Egypt', flag: '🇪🇬', isGulf: true },
+    'JO': { name: 'Jordan', flag: '🇯🇴', isGulf: true },
+    'LB': { name: 'Lebanon', flag: '🇱🇧', isGulf: true },
+    'TR': { name: 'Turkey', flag: '🇹🇷', isGulf: true },
+    'ID': { name: 'Indonesia', flag: '🇮🇩', isGulf: false },
+};
+
+/**
+ * Calculate regional start date based on global Gulf start date.
+ * Non-Gulf countries lag by one day.
+ */
+export const getRegionalStartDate = (baseGulfDate: string, region: Region): string => {
+    const config = REGION_CONFIGS[region];
+    if (!config) return baseGulfDate;
+    if (config.isGulf) return baseGulfDate;
+
+    // Add 1 day lag
+    const date = new Date(baseGulfDate);
+    date.setDate(date.getDate() + 1);
+    return date.toISOString().split('T')[0];
 };
 
 const REGION_STORAGE_KEY = 'user_ramadan_region';
 
-export const getUserRegion = (): Region => {
+export const getUserRegion = (): Region | null => {
     const saved = localStorage.getItem(REGION_STORAGE_KEY) as Region;
     if (saved && REGION_CONFIGS[saved]) {
         return saved;
     }
-    // Default to India as requested
-    return 'IN';
+    return null;
 };
 
 export const setUserRegion = (region: Region): void => {
