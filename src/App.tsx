@@ -3,6 +3,7 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import Landing from './pages/Landing';
 import Dashboard from './pages/Dashboard';
+import AdminDashboard from './pages/AdminDashboard';
 import LearningModule from './components/LearningModule';
 import QuizPage from './components/QuizPage';
 import GlobalBismillah from './components/GlobalBismillah';
@@ -34,6 +35,20 @@ const PublicRoute = ({ children }: { children: React.ReactNode }) => {
     }
 
     return currentUser ? <Navigate to="/dashboard" /> : <>{children}</>;
+};
+
+const AdminRoute = ({ children }: { children: React.ReactNode }) => {
+    const { currentUser, isAdmin, loading } = useAuth();
+
+    if (loading) {
+        return (
+            <div className="loading-container">
+                <div className="spinner"></div>
+            </div>
+        );
+    }
+
+    return currentUser && isAdmin ? <>{children}</> : <Navigate to="/dashboard" />;
 };
 
 function AppRoutes() {
@@ -69,6 +84,14 @@ function AppRoutes() {
                     <ProtectedRoute>
                         <QuizPage />
                     </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/admin"
+                element={
+                    <AdminRoute>
+                        <AdminDashboard />
+                    </AdminRoute>
                 }
             />
         </Routes>

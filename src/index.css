@@ -473,17 +473,21 @@ body {
 }
 
 .day-number {
+  font-family: 'Playfair Display', serif;
   font-size: 2.2rem;
   font-weight: 800;
   margin-bottom: 0.5rem;
   line-height: 1.2;
+  color: var(--gold-accent);
 }
 
 .day-label {
-  font-size: 50%;
+  font-size: 0.9rem;
   display: block;
-  opacity: 0.8;
-  font-weight: 500;
+  color: #ffffff;
+  opacity: 1;
+  font-weight: 600;
+  margin-bottom: 0.2rem;
 }
 
 .day-status {
@@ -562,35 +566,6 @@ body {
   }
 }
 
-@media (max-width: 480px) {
-
-  .landing-container,
-  .dashboard-main {
-    padding: 1rem;
-  }
-
-  .hero-title {
-    font-size: 2rem;
-  }
-
-  .days-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
-  }
-
-  .day-card {
-    padding: 0.75rem;
-  }
-
-  .day-number {
-    font-size: 1.5rem;
-    font-weight: 800;
-  }
-
-  .day-status {
-    font-size: 0.75rem;
-  }
-}
 
 /* Learning Module Styles */
 .learning-module-container {
@@ -930,33 +905,6 @@ body {
   }
 }
 
-@media (max-width: 480px) {
-  .learning-header {
-    padding: 1rem;
-  }
-
-  .learning-title {
-    font-size: 1.2rem;
-  }
-
-  .back-button {
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
-  }
-
-  .slide-title {
-    font-size: 1.75rem;
-  }
-
-  .slide-content {
-    font-size: 1rem;
-    text-align: left;
-  }
-
-  .slide-image-container {
-    max-height: 250px;
-  }
-}
 
 /* Theme Toggle Button */
 .theme-toggle {
@@ -1118,13 +1066,6 @@ button,
   background-clip: text;
 }
 
-/* Day card numbers - elegant serif */
-.day-number {
-  font-family: 'Playfair Display', serif;
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--gold-accent);
-}
 
 /* "Read More" style links */
 .read-more,
@@ -1701,5 +1642,103 @@ button,
 
   to {
     opacity: 1;
+  }
+}
+
+/* ============================================
+   CONSOLIDATED MOBILE STYLES (480px)
+   ============================================ */
+@media (max-width: 480px) {
+
+  .landing-container,
+  .dashboard-main {
+    padding: 1rem !important;
+  }
+
+  .hero-title {
+    font-size: 1.8rem !important;
+  }
+
+  .days-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.6rem !important;
+  }
+
+  .day-card {
+    padding: 0.5rem !important;
+    min-height: 100px !important;
+  }
+
+  .day-card-content {
+    padding: 0.2rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+
+  .day-number {
+    font-size: 1.1rem !important;
+    font-weight: 800 !important;
+    line-height: 1.1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 2px !important;
+    width: 100% !important;
+  }
+
+  .day-label {
+    font-size: 0.85rem !important;
+    margin-bottom: 2px !important;
+    white-space: nowrap !important;
+    display: block !important;
+    width: 100% !important;
+    text-align: center !important;
+    opacity: 1 !important;
+    color: #ffffff !important;
+  }
+
+  .day-status {
+    font-size: 0.65rem !important;
+    white-space: nowrap !important;
+    margin-top: 4px !important;
+  }
+
+  .lock-overlay {
+    top: 0.5rem !important;
+    right: 0.5rem !important;
+  }
+
+  .lock-overlay svg {
+    width: 18px !important;
+    height: 18px !important;
+  }
+
+  /* Learning & Quiz Mobile Fixes */
+  .learning-header {
+    padding: 0.75rem 1rem !important;
+  }
+
+  .learning-title {
+    font-size: 1.1rem !important;
+  }
+
+  .back-button {
+    padding: 0.4rem 0.8rem !important;
+    font-size: 0.85rem !important;
+  }
+
+  .slide-title {
+    font-size: 1.5rem !important;
+  }
+
+  .slide-content {
+    font-size: 0.95rem !important;
+    line-height: 1.6 !important;
+  }
+
+  .slide-image-container {
+    max-height: 200px !important;
   }
 }

@@ -8,6 +8,7 @@ export interface QuizResultRecord {
     percentage: number;
     userEmail: string;
     dateAttempted: string; // ISO string
+    whatsappGroup: string;
 }
 
 /**
@@ -112,6 +113,29 @@ export const getLeaderboard = async (topN: number = 3): Promise<LeaderboardEntry
         return entries.slice(0, topN);
     } catch (error) {
         console.error('Error fetching leaderboard:', error);
+        return [];
+    }
+};
+
+/**
+ * Fetch all quiz results for admin view.
+ */
+export const getAllQuizResultsForAdmin = async (groupName?: string): Promise<QuizResultRecord[]> => {
+    try {
+        let q = query(collection(db, 'quizResults'), orderBy('dateAttempted', 'desc'));
+        if (groupName) {
+            // Re-creating the query with where clause. Firestore needs a composite index if combining where we orderBy.
+            // For now, let's keep it simple or filter in-memory if needed.
+            q = query(
+                collection(db, 'quizResults'),
+                where('whatsappGroup', '==', groupName),
+                orderBy('dateAttempted', 'desc')
+            );
+        }
+        const snapshot = await getDocs(q);
+        return snapshot.docs.map(doc => doc.data() as QuizResultRecord);
+    } catch (error) {
+        console.error('Error fetching all quiz results for admin:', error);
         return [];
     }
 };

@@ -6,6 +6,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { Question } from '../types/quiz';
 import { ChevronLeft, ChevronRight, Trophy, Home, CheckCircle, XCircle, Search, X } from 'lucide-react';
 import { QUIZ_EVIDENCE } from '../services/Quiz/Evidence';
+import GroupSelectionModal from './GroupSelectionModal';
 
 const QuizPage = () => {
     const { dayNumber } = useParams<{ dayNumber: string }>();
@@ -23,6 +24,8 @@ const QuizPage = () => {
     const [saved, setSaved] = useState(false);
     const [previousResult, setPreviousResult] = useState<QuizResultRecord | null>(null);
     const [showEvidence, setShowEvidence] = useState(false);
+    const [whatsappGroup, setWhatsappGroup] = useState<string | null>(localStorage.getItem('ramadan_quiz_group'));
+    const [showGroupModal, setShowGroupModal] = useState(false);
 
     useEffect(() => {
         if (!dayNumber) return;
@@ -106,6 +109,7 @@ const QuizPage = () => {
                 percentage: Math.round((score / questions.length) * 100),
                 userEmail: email,
                 dateAttempted: new Date().toISOString(),
+                whatsappGroup: whatsappGroup || 'Unknown'
             });
             setSaved(true);
         } catch (err) {
@@ -363,6 +367,18 @@ const QuizPage = () => {
                     </button>
                 )}
             </div>
+
+            {/* Group Selection Modal */}
+            {(showGroupModal || !whatsappGroup) && (
+                <GroupSelectionModal
+                    currentGroup={whatsappGroup || undefined}
+                    onSelect={(group) => {
+                        setWhatsappGroup(group);
+                        localStorage.setItem('ramadan_quiz_group', group);
+                        setShowGroupModal(false);
+                    }}
+                />
+            )}
         </div>
     );
 };

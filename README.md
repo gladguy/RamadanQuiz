@@ -126,4 +126,6 @@ Contributions, issues, and feature requests are welcome!
 ---
 npm run build && firebase deploy --only hosting --project tamilquranquiz
 
+firebase deploy --only firestore:rules
+
 Made with ❤️ for the Ramadan community

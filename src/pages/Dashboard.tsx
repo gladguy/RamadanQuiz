@@ -1,13 +1,13 @@
 import { useAuth } from '../contexts/AuthContext';
 import { isDayUnlocked } from '../utils/ramadanDates';
-import { Lock, BookOpen, LogOut, Globe } from 'lucide-react';
+import { Lock, BookOpen, LogOut, Globe, Shield } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Leaderboard from '../components/Leaderboard';
 import { getUserRegion, setUserRegion, REGION_CONFIGS, Region } from '../services/regionService';
 import { useState } from 'react';
 
 const Dashboard = () => {
-    const { currentUser, signOut } = useAuth();
+    const { currentUser, isAdmin, signOut } = useAuth();
     const navigate = useNavigate();
     const [region, setRegion] = useState<Region>(getUserRegion());
 
@@ -68,7 +68,28 @@ const Dashboard = () => {
                             <div style={{ pointerEvents: 'none', marginLeft: '-0.3rem', color: 'var(--gold-accent)', fontSize: '0.8rem' }}>▼</div>
                         </div>
                     </div>
-                    <div className="header-right" style={{ display: 'flex', alignItems: 'center' }}>
+                    <div className="header-right" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                        {isAdmin && (
+                            <button
+                                onClick={() => navigate('/admin')}
+                                className="admin-btn"
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.5rem',
+                                    background: 'rgba(238, 198, 95, 0.1)',
+                                    border: '1px solid var(--gold-accent)',
+                                    color: 'var(--gold-accent)',
+                                    padding: '0.5rem 1rem',
+                                    borderRadius: '12px',
+                                    cursor: 'pointer',
+                                    fontWeight: 'bold'
+                                }}
+                            >
+                                <Shield size={20} />
+                                <span className="desktop-only">Admin</span>
+                            </button>
+                        )}
                         <button onClick={handleSignOut} className="signout-btn">
                             <LogOut size={20} />
                             <span className="desktop-only">வெளியேறு</span>
@@ -106,7 +127,8 @@ const Dashboard = () => {
 
                 <div className="days-grid">
                     {days.map((day) => {
-                        const unlocked = isDayUnlocked(day, currentStartDate);
+                        const unlocked = isAdmin || isDayUnlocked(day, currentStartDate);
+                        const isLockedForUser = !isAdmin && !isDayUnlocked(day, currentStartDate);
                         return (
                             <div
                                 key={day}
@@ -114,7 +136,7 @@ const Dashboard = () => {
                                 onClick={() => handleDayClick(day, unlocked)}
                             >
                                 <div className="day-card-content">
-                                    {!unlocked && (
+                                    {isLockedForUser && (
                                         <div className="lock-overlay">
                                             <Lock size={24} />
                                         </div>

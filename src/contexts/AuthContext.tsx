@@ -9,6 +9,7 @@ import { auth, googleProvider } from '../config/firebase';
 
 interface AuthContextType {
     currentUser: User | null;
+    isAdmin: boolean;
     loading: boolean;
     signInWithGoogle: () => Promise<void>;
     signOut: () => Promise<void>;
@@ -107,6 +108,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     const value = {
         currentUser,
+        isAdmin: currentUser?.email === 'kwaheedsays@gmail.com',
         loading,
         signInWithGoogle,
         signOut
