@@ -16,6 +16,8 @@ dist-ssr
 *.docx
 *.zip
 *.rules
+*.webp
+*.mp4
 
 # Editor directories and files
 .vscode/*

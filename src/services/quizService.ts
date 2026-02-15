@@ -137,20 +137,30 @@ export const parseQuizContent = (rawContent: string): Question[] => {
             while (i < lines.length) {
                 const optLine = lines[i].trim();
                 const optMatch = optLine.match(/^([A-D])\)\s*(.*)/);
+
                 if (optMatch) {
                     const label = optMatch[1];
-                    const text = optMatch[2].trim();
-                    // Check for trailing double-space (correct answer marker)
-                    if (optMatch[2].match(/\s{2,}$/)) {
+                    let text = optMatch[2];
+
+                    // Improved correct answer detection:
+                    // 1. Check for trailing double-space
+                    // 2. Check for "✅" or "Correct" (unlikely but good to have)
+                    // 3. Fallback to double space at the very end of optMatch[2]
+                    const originalText = optMatch[2];
+                    if (originalText.match(/\s{2,}$/) || originalText.match(/\s{2,}(?=\s|$)/)) {
                         correctLabel = label;
+                        text = text.trim();
+                    } else if (originalText.includes('✅') || originalText.includes('(Correct)')) {
+                        correctLabel = label;
+                        text = text.replace('✅', '').replace('(Correct)', '').trim();
                     }
-                    optionEntries.push({ label, text });
+
+                    optionEntries.push({ label, text: text.trim() });
                     i++;
-                } else if (optLine.startsWith('+') || optLine === '') {
-                    // Skip  markers and empty lines between options
+                } else if (optLine === '' || optLine.startsWith('+')) {
                     i++;
                 } else {
-                    break; // Not an option line, stop collecting
+                    break;
                 }
             }
 

@@ -37,6 +37,12 @@ const QuizPage = () => {
         const email = currentUser?.email;
 
         const loadQuiz = async () => {
+            const day = parseInt(dayNumber);
+
+            // Always fetch evidence for the day/language
+            const dayEvidence = fetchEvidenceByDay(day, language);
+            setEvidence(dayEvidence);
+
             if (email) {
                 const existing = await getUserQuizAttempt(email, day);
                 if (existing) {
@@ -52,9 +58,6 @@ const QuizPage = () => {
             } else {
                 setError(t('common.error'));
             }
-
-            const dayEvidence = fetchEvidenceByDay(day, language);
-            setEvidence(dayEvidence);
 
             setLoading(false);
         };
