@@ -111,10 +111,9 @@ const Dashboard = () => {
                                     background: 'rgba(238, 198, 95, 0.1)',
                                     border: '1px solid var(--gold-accent)',
                                     color: 'var(--gold-accent)',
-                                    padding: '0.5rem 1rem',
-                                    borderRadius: '12px',
-                                    cursor: 'pointer',
-                                    fontWeight: 'bold'
+                                    padding: '0.4rem 0.8rem',
+                                    borderRadius: '20px',
+                                    cursor: 'pointer'
                                 }}
                             >
                                 <Shield size={20} />
@@ -123,9 +122,7 @@ const Dashboard = () => {
                         )}
                         <LanguageToggle />
                         <button onClick={handleSignOut} className="signout-btn">
-                            <LogOut size={20} />
-                            <span className="desktop-only">{t('common.signout')}</span>
-                            <span className="mobile-only" style={{ fontSize: '1.2rem' }}>🚪➡️</span>
+                            <span>{t('common.signout')}</span>
                         </button>
                     </div>
                 </div>

@@ -9,6 +9,7 @@ export interface UserProfile {
     fullName: string;
     lastSeen: string;
     region?: string;
+    lastMulkDay?: number;
 }
 
 /**

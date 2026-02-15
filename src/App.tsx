@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import LearningModule from './components/LearningModule';
 import QuizPage from './components/QuizPage';
+import MulkChallenge from './pages/MulkChallenge';
 import GlobalBismillah from './components/GlobalBismillah';
 import './index.css';
 
@@ -84,6 +85,14 @@ function AppRoutes() {
                 element={
                     <ProtectedRoute>
                         <QuizPage />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/mulk-challenge/:dayNumber"
+                element={
+                    <ProtectedRoute>
+                        <MulkChallenge />
                     </ProtectedRoute>
                 }
             />

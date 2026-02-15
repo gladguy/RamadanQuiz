@@ -91,12 +91,29 @@ const LearningModule = () => {
     return (
         <div className="learning-module-container">
             {/* Header */}
-            <header className="learning-header">
-                <button onClick={() => navigate('/dashboard')} className="back-button">
-                    <ChevronLeft size={20} />
-                    {t('common.home')}
+            <header className="learning-header" style={{ flexDirection: 'column', gap: '1rem', padding: '1.5rem 2rem' }}>
+                <div style={{ display: 'flex', width: '100%', alignItems: 'center', position: 'relative', justifyContent: 'center' }}>
+                    <button onClick={() => navigate('/dashboard')} className="back-button" style={{ position: 'absolute', left: 0 }}>
+                        <ChevronLeft size={20} />
+                        <span className="desktop-only">{t('common.home')}</span>
+                    </button>
+                    <h1 className="learning-title" style={{ margin: 0 }}>
+                        {dayNumber === '0' ? t('dashboard.try_lesson') : `${t('dashboard.day_label')} ${dayNumber}`}
+                    </h1>
+                </div>
+                <button
+                    onClick={() => navigate(`/mulk-challenge/${dayNumber}`)}
+                    className="back-button"
+                    style={{
+                        background: 'rgba(238, 198, 95, 0.1)',
+                        border: '1px solid var(--gold-accent)',
+                        color: 'var(--gold-accent)',
+                        width: 'fit-content',
+                        padding: '0.6rem 2rem'
+                    }}
+                >
+                    ஸுராஹ் முல்க் - தினம் ஒரு ஆயத் மனனம் செய்வோம்
                 </button>
-                <h1 className="learning-title">{dayNumber === '0' ? t('dashboard.try_lesson') : `${t('dashboard.day_label')} ${dayNumber}`}</h1>
             </header>
 
             {/* Slide Display */}
