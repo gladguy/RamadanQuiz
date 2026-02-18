@@ -126,7 +126,7 @@ const QuizPage = () => {
                 percentage: Math.round((score / questions.length) * 100),
                 userEmail: email,
                 dateAttempted: new Date().toISOString(),
-                whatsappGroup: whatsappGroup || 'Unknown'
+                whatsappGroup: whatsappGroup?.trim() || 'Unknown'
             });
             setSaved(true);
         } catch (err) {

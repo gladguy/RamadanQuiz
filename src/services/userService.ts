@@ -1,4 +1,4 @@
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, collection, getDocs } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { User } from 'firebase/auth';
 
@@ -19,7 +19,11 @@ export interface UserProfile {
 export const updateUserProfile = async (uid: string, updates: Partial<UserProfile>): Promise<void> => {
     try {
         const userDocRef = doc(db, 'quizUsers', uid);
-        await setDoc(userDocRef, updates, { merge: true });
+        const finalUpdates = { ...updates };
+        if (finalUpdates.whatsappGroup) {
+            finalUpdates.whatsappGroup = finalUpdates.whatsappGroup.trim();
+        }
+        await setDoc(userDocRef, finalUpdates, { merge: true });
         console.log(`✅ User profile updated for ${uid}`);
     } catch (error) {
         console.error('❌ Error updating user profile:', error);
@@ -76,5 +80,18 @@ export const getUserProfile = async (uid: string): Promise<UserProfile | null> =
     } catch (error) {
         console.error('Error fetching user profile:', error);
         return null;
+    }
+};
+
+/**
+ * Fetch all user profiles (Admin only usage).
+ */
+export const getAllUserProfiles = async (): Promise<UserProfile[]> => {
+    try {
+        const querySnapshot = await getDocs(collection(db, 'quizUsers'));
+        return querySnapshot.docs.map(doc => doc.data() as UserProfile);
+    } catch (error) {
+        console.error('Error fetching all user profiles:', error);
+        return [];
     }
 };

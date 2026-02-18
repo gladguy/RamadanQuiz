@@ -9,6 +9,7 @@ import { getUserRegion, setUserRegion, REGION_CONFIGS, Region, getRegionalStartD
 import { getGulfStartDate } from '../services/appConfigService';
 import { getUserProfile, updateUserProfile } from '../services/userService';
 import RegionSelectionModal from '../components/RegionSelectionModal';
+import GroupSelectionModal from '../components/GroupSelectionModal';
 import { useState, useEffect } from 'react';
 
 const Dashboard = () => {
@@ -19,6 +20,8 @@ const Dashboard = () => {
     const [gulfStartDate, setGulfStartDate] = useState<string>('2026-02-18');
     const [showRegionModal, setShowRegionModal] = useState(false);
     const [userProfile, setUserProfile] = useState<any>(null);
+    const [whatsappGroup, setWhatsappGroup] = useState<string | null>(localStorage.getItem('ramadan_quiz_group'));
+    const [showGroupModal, setShowGroupModal] = useState(false);
 
     useEffect(() => {
         const fetchConfigAndProfile = async () => {
@@ -37,6 +40,13 @@ const Dashboard = () => {
             } else {
                 setShowRegionModal(true);
             }
+
+            if (profile?.whatsappGroup) {
+                setWhatsappGroup(profile.whatsappGroup);
+                localStorage.setItem('ramadan_quiz_group', profile.whatsappGroup);
+            } else if (!isAdmin) {
+                setShowGroupModal(true);
+            }
         };
         fetchConfigAndProfile();
     }, [currentUser]);
@@ -47,6 +57,22 @@ const Dashboard = () => {
             setRegion(selectedRegion);
             setUserRegion(selectedRegion);
             setShowRegionModal(false);
+        }
+    };
+
+    const handleGroupSelect = async (selectedGroup: string) => {
+        if (currentUser) {
+            const trimmedGroup = selectedGroup.trim();
+            await updateUserProfile(currentUser.uid, { whatsappGroup: trimmedGroup });
+            setWhatsappGroup(trimmedGroup);
+            localStorage.setItem('ramadan_quiz_group', trimmedGroup);
+
+            // Also update local userProfile state to reflect change immediately in header
+            if (userProfile) {
+                setUserProfile({ ...userProfile, whatsappGroup: trimmedGroup });
+            }
+
+            setShowGroupModal(false);
         }
     };
 
@@ -132,7 +158,7 @@ const Dashboard = () => {
                             }}>
                                 {userProfile?.fullName || currentUser?.displayName || t('common.guest')}
                             </span>
-                            {userProfile?.whatsappGroup && (
+                            {(whatsappGroup || userProfile?.whatsappGroup) && (
                                 <span style={{
                                     fontSize: '0.7rem',
                                     color: 'var(--text-primary)',
@@ -140,7 +166,7 @@ const Dashboard = () => {
                                     fontWeight: 400,
                                     marginTop: '2px'
                                 }}>
-                                    {userProfile.whatsappGroup}
+                                    {whatsappGroup || userProfile?.whatsappGroup}
                                 </span>
                             )}
                         </div>
@@ -173,7 +199,7 @@ const Dashboard = () => {
             </header>
 
             {/* Leaderboard */}
-            <Leaderboard />
+            <Leaderboard whatsappGroup={whatsappGroup || undefined} />
 
             {/* Main Content */}
             <main className="dashboard-main">
@@ -207,6 +233,7 @@ const Dashboard = () => {
             </main>
 
             {showRegionModal && <RegionSelectionModal onSelect={handleRegionSelect} />}
+            {showGroupModal && <GroupSelectionModal onSelect={handleGroupSelect} currentGroup={whatsappGroup || undefined} />}
         </div>
     );
 };

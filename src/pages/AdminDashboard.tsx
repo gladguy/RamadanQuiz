@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { getWhatsAppGroups, addWhatsAppGroup, deleteWhatsAppGroup, WhatsAppGroup } from '../services/whatsappGroupsService';
 import { getAllQuizResultsForAdmin, QuizResultRecord } from '../services/quizResultsService';
 import { getGulfStartDate, updateGulfStartDate } from '../services/appConfigService';
-import { Users, Plus, Trash2, Search, Calendar, Trophy, ChevronLeft, Settings } from 'lucide-react';
+import { getUserProfile, updateUserProfile, getAllUserProfiles, UserProfile } from '../services/userService';
+import { Users, Plus, Trash2, Search, Calendar, Trophy, ChevronLeft, Settings, UserPen, Edit2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const AdminDashboard = () => {
@@ -13,19 +14,24 @@ const AdminDashboard = () => {
     const [selectedGroup, setSelectedGroup] = useState<string>('');
     const [gulfStartDate, setGulfStartDate] = useState<string>('2026-02-18');
     const [isUpdatingDate, setIsUpdatingDate] = useState(false);
+    const [users, setUsers] = useState<UserProfile[]>([]);
+    const [userSearchTerm, setUserSearchTerm] = useState('');
+    const [isUpdatingUser, setIsUpdatingUser] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const loadInitialData = async () => {
             try {
-                const [fetchedGroups, fetchedResults, fetchedDate] = await Promise.all([
+                const [fetchedGroups, fetchedResults, fetchedDate, fetchedUsers] = await Promise.all([
                     getWhatsAppGroups(),
                     getAllQuizResultsForAdmin(),
-                    getGulfStartDate()
+                    getGulfStartDate(),
+                    getAllUserProfiles()
                 ]);
                 setGroups(fetchedGroups);
                 setResults(fetchedResults);
                 setGulfStartDate(fetchedDate);
+                setUsers(fetchedUsers);
             } catch (error) {
                 console.error('Error loading admin data:', error);
             } finally {
@@ -70,6 +76,26 @@ const AdminDashboard = () => {
             alert('குழுவை நீக்குவதில் பிழை ஏற்பட்டது');
         }
     };
+
+    const handleUpdateUserGroup = async (uid: string, newGroup: string) => {
+        try {
+            setIsUpdatingUser(uid);
+            await updateUserProfile(uid, { whatsappGroup: newGroup });
+            const updatedUsers = await getAllUserProfiles();
+            setUsers(updatedUsers);
+        } catch (error) {
+            console.error('Error updating user group:', error);
+            alert('பயனர் குழுவை புதுப்பிப்பதில் பிழை ஏற்பட்டது');
+        } finally {
+            setIsUpdatingUser(null);
+        }
+    };
+
+    const filteredUsers = users.filter(user =>
+        user.fullName?.toLowerCase().includes(userSearchTerm.toLowerCase()) ||
+        user.email?.toLowerCase().includes(userSearchTerm.toLowerCase()) ||
+        user.whatsappGroup?.toLowerCase().includes(userSearchTerm.toLowerCase())
+    );
 
     const filteredResults = selectedGroup
         ? results.filter(r => r.whatsappGroup === selectedGroup)
@@ -201,6 +227,87 @@ const AdminDashboard = () => {
                             </tbody>
                         </table>
                         {filteredResults.length === 0 && <p style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-secondary)' }}>முடிவுகள் எதுவும் இல்லை</p>}
+                    </div>
+                </section>
+
+                {/* Column 3: User Management */}
+                <section className="admin-section" style={{ background: 'var(--surface)', padding: '1.5rem', borderRadius: '20px', border: '1px solid var(--border)', gridColumn: 'span 2' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                            <Users size={24} style={{ color: 'var(--gold-accent)' }} />
+                            <h2 style={{ fontSize: '1.25rem' }}>பயனர் நிர்வாகம் (User Management)</h2>
+                        </div>
+                        <div style={{ position: 'relative', width: '300px' }}>
+                            <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} />
+                            <input
+                                type="text"
+                                placeholder="தேட (பெயர்/மின்னஞ்சல்/குழு)..."
+                                value={userSearchTerm}
+                                onChange={(e) => setUserSearchTerm(e.target.value)}
+                                style={{ width: '100%', padding: '0.6rem 0.6rem 0.6rem 2.5rem', borderRadius: '10px', border: '1px solid var(--border)', background: 'var(--surface-light)', color: 'white' }}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="users-table" style={{ overflowX: 'auto' }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                            <thead>
+                                <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                                    <th style={{ padding: '1rem' }}>பெயர்</th>
+                                    <th style={{ padding: '1rem' }}>மின்னஞ்சல்</th>
+                                    <th style={{ padding: '1rem' }}>தற்போதைய குழு</th>
+                                    <th style={{ padding: '1rem' }}>குழுவை மாற்ற</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {filteredUsers.map((user) => (
+                                    <tr key={user.uid} style={{ borderBottom: '1px solid var(--border)', fontSize: '0.9rem' }}>
+                                        <td style={{ padding: '1rem' }}>{user.fullName}</td>
+                                        <td style={{ padding: '1rem' }}>{user.email}</td>
+                                        <td style={{ padding: '1rem' }}>
+                                            <span style={{
+                                                padding: '0.25rem 0.75rem',
+                                                borderRadius: '20px',
+                                                background: user.whatsappGroup ? 'rgba(255, 184, 0, 0.1)' : 'rgba(255, 255, 255, 0.05)',
+                                                color: user.whatsappGroup ? 'var(--gold-accent)' : 'var(--text-secondary)',
+                                                fontSize: '0.8rem'
+                                            }}>
+                                                {user.whatsappGroup || 'குழு இல்லை'}
+                                            </span>
+                                        </td>
+                                        <td style={{ padding: '1rem' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                                <select
+                                                    value={user.whatsappGroup || ''}
+                                                    onChange={(e) => handleUpdateUserGroup(user.uid, e.target.value)}
+                                                    disabled={isUpdatingUser === user.uid}
+                                                    style={{
+                                                        padding: '0.4rem',
+                                                        borderRadius: '8px',
+                                                        border: '1px solid var(--border)',
+                                                        background: 'var(--surface-light)',
+                                                        color: 'white',
+                                                        fontSize: '0.85rem',
+                                                        flex: 1
+                                                    }}
+                                                >
+                                                    <option value="">தேர்ந்தெடுக்கவும்</option>
+                                                    {groups.map(g => <option key={g.id} value={g.name}>{g.name}</option>)}
+                                                </select>
+                                                {isUpdatingUser === user.uid && (
+                                                    <div className="spinner-small" style={{ width: '16px', height: '16px', borderWidth: '2px' }}></div>
+                                                )}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                        {filteredUsers.length === 0 && (
+                            <p style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-secondary)' }}>
+                                பயனர்கள் யாரும் இல்லை
+                            </p>
+                        )}
                     </div>
                 </section>
             </div>

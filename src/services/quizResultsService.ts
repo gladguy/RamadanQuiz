@@ -82,34 +82,61 @@ export interface LeaderboardEntry {
 export const getLeaderboard = async (topN: number = 3, groupName?: string): Promise<LeaderboardEntry[]> => {
     try {
         const adminEmail = 'kwaheedsays@gmail.com';
-        let q = query(collection(db, 'quizResults'));
 
-        if (groupName) {
-            q = query(collection(db, 'quizResults'), where('whatsappGroup', '==', groupName));
-        }
-
+        // Fetch all quiz results (we'll filter in-memory to handle untrimmed legacy data)
+        const q = query(collection(db, 'quizResults'));
         const snapshot = await getDocs(q);
+
+        const trimmedGroupName = groupName?.trim();
+        console.log(`📊 Fetching leaderboard for group: "${trimmedGroupName}"`);
+        console.log(`📥 Found ${snapshot.size} total quiz results`);
+
         const userMap: Record<string, { totalScore: number; totalQuestions: number; quizzesTaken: number }> = {};
 
         snapshot.docs.forEach(doc => {
             const data = doc.data() as QuizResultRecord;
-            // Exclude admin and Trial Lesson (Day 0)
-            if (data.userEmail === adminEmail || data.dayNumber === 0) return;
+            const userEmail = data.userEmail?.toLowerCase().trim();
+            const resultGroup = data.whatsappGroup?.trim();
 
-            if (!userMap[data.userEmail]) {
-                userMap[data.userEmail] = { totalScore: 0, totalQuestions: 0, quizzesTaken: 0 };
+            console.log(`🔍 Processing: email=${userEmail}, group="${resultGroup}", day=${data.dayNumber}`);
+
+            // Filter by group (trim both sides to handle legacy data)
+            if (trimmedGroupName && resultGroup !== trimmedGroupName) {
+                console.log(`❌ Skipped: group mismatch. Expected="${trimmedGroupName}", Got="${resultGroup}"`);
+                return;
             }
-            userMap[data.userEmail].totalScore += data.score;
-            userMap[data.userEmail].totalQuestions += data.totalQuestions;
-            userMap[data.userEmail].quizzesTaken += 1;
+
+            // Exclude admin and Trial Lesson (Day 0)
+            if (userEmail === adminEmail) {
+                console.log(`❌ Skipped: admin user`);
+                return;
+            }
+
+            if (data.dayNumber === 0) {
+                console.log(`❌ Skipped: trial lesson (Day 0)`);
+                return;
+            }
+
+            console.log(`✅ Including user: ${userEmail}`);
+
+            if (!userMap[userEmail]) {
+                userMap[userEmail] = { totalScore: 0, totalQuestions: 0, quizzesTaken: 0 };
+            }
+            userMap[userEmail].totalScore += data.score;
+            userMap[userEmail].totalQuestions += data.totalQuestions;
+            userMap[userEmail].quizzesTaken += 1;
         });
+        console.log(`👤 Unique users in group: ${Object.keys(userMap).length}`);
 
         // Fetch user profiles to get real full names
         const usersSnapshot = await getDocs(collection(db, 'quizUsers'));
         const profileMap: Record<string, string> = {};
         usersSnapshot.docs.forEach(doc => {
             const data = doc.data();
-            profileMap[data.email] = data.fullName || data.displayName || data.email.split('@')[0];
+            const normalizedEmail = data.email?.toLowerCase().trim();
+            if (normalizedEmail) {
+                profileMap[normalizedEmail] = data.fullName || data.displayName || data.email.split('@')[0];
+            }
         });
 
         const entries: LeaderboardEntry[] = Object.entries(userMap).map(([email, stats]) => ({

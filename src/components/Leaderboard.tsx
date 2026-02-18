@@ -5,32 +5,42 @@ import { Trophy, Medal, Award } from 'lucide-react';
 const RANK_ICONS = [Trophy, Medal, Award];
 const RANK_LABELS = ['🥇', '🥈', '🥉'];
 
-const Leaderboard = () => {
+interface LeaderboardProps {
+    whatsappGroup?: string;
+}
+
+const Leaderboard = ({ whatsappGroup: propGroup }: LeaderboardProps) => {
     const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
     const [loading, setLoading] = useState(true);
-    const whatsappGroup = localStorage.getItem('ramadan_quiz_group');
+    const whatsappGroup = (propGroup || localStorage.getItem('ramadan_quiz_group'))?.trim();
 
     useEffect(() => {
         const fetchLeaderboard = async () => {
             if (!whatsappGroup) {
                 setLoading(false);
+                setEntries([]);
                 return;
             }
-            const data = await getLeaderboard(3, whatsappGroup);
-            setEntries(data);
-            setLoading(false);
+            setLoading(true);
+            try {
+                const data = await getLeaderboard(5, whatsappGroup);
+                setEntries(data);
+            } catch (err) {
+                console.error('Leaderboard fetch error:', err);
+                setEntries([]);
+            } finally {
+                setLoading(false);
+            }
         };
         fetchLeaderboard();
     }, [whatsappGroup]);
-
-    if (!whatsappGroup) return null;
 
     if (loading) {
         return (
             <div className="leaderboard-container">
                 <h2 className="leaderboard-title">
                     <Trophy size={24} />
-                    சிறந்த மாணவர்கள்
+                    3 சிறந்த உறுப்பினர்கள்
                 </h2>
                 <div className="leaderboard-loading">
                     <div className="spinner"></div>
@@ -44,9 +54,23 @@ const Leaderboard = () => {
             <div className="leaderboard-container">
                 <h2 className="leaderboard-title">
                     <Trophy size={24} />
-                    சிறந்த மாணவர்கள்
+                    3 சிறந்த உறுப்பினர்கள்
                 </h2>
-                <p className="leaderboard-empty">உங்கள் குழுவில் இன்னும் யாரும் வினாடி வினாவை முயற்சிக்கவில்லை</p>
+                {whatsappGroup && (
+                    <div className="mobile-only" style={{
+                        fontSize: '0.75rem',
+                        color: 'var(--text-secondary)',
+                        textAlign: 'center',
+                        marginTop: '-0.8rem',
+                        marginBottom: '1rem',
+                        opacity: 0.8
+                    }}>
+                        {whatsappGroup}
+                    </div>
+                )}
+                <p className="leaderboard-empty" style={{ opacity: 0.6, fontStyle: 'italic' }}>
+                    {whatsappGroup ? 'உங்கள் குழுவில் இன்னும் யாரும் வினாடி வினாவை முயற்சிக்கவில்லை (பாடப் பயிற்சி தவிர்த்து)' : 'குழுவை தேர்ந்தெடுத்து சிறந்த மாணவர்களைப் பாருங்கள்'}
+                </p>
             </div>
         );
     }
@@ -57,6 +81,18 @@ const Leaderboard = () => {
                 <Trophy size={24} />
                 சிறந்த மாணவர்கள்
             </h2>
+            {whatsappGroup && (
+                <div className="mobile-only" style={{
+                    fontSize: '0.75rem',
+                    color: 'var(--text-secondary)',
+                    textAlign: 'center',
+                    marginTop: '-0.8rem',
+                    marginBottom: '1rem',
+                    opacity: 0.8
+                }}>
+                    {whatsappGroup}
+                </div>
+            )}
             <div className="leaderboard-list">
                 {entries.map((entry, index) => {
                     const RankIcon = RANK_ICONS[index] || Award;
