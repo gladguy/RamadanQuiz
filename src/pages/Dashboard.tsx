@@ -132,6 +132,17 @@ const Dashboard = () => {
                             }}>
                                 {userProfile?.fullName || currentUser?.displayName || t('common.guest')}
                             </span>
+                            {userProfile?.whatsappGroup && (
+                                <span style={{
+                                    fontSize: '0.7rem',
+                                    color: 'var(--text-primary)',
+                                    opacity: 0.6,
+                                    fontWeight: 400,
+                                    marginTop: '2px'
+                                }}>
+                                    {userProfile.whatsappGroup}
+                                </span>
+                            )}
                         </div>
                         {isAdmin && (
                             <button
@@ -166,26 +177,7 @@ const Dashboard = () => {
 
             {/* Main Content */}
             <main className="dashboard-main">
-                <div className="special-lesson-section" style={{ marginBottom: '1.5rem', textAlign: 'center' }}>
-                    <div
-                        className="day-card unlocked special"
-                        onClick={() => handleDayClick(0, true)}
-                        style={{
-                            maxWidth: '200px',
-                            margin: '0 auto',
-                            aspectRatio: 'unset',
-                            padding: '1rem',
-                            background: '#000',
-                            color: 'var(--gold-accent)',
-                            border: '1px solid var(--gold-accent)',
-                            boxShadow: '0 4px 15px rgba(238, 198, 95, 0.2)'
-                        }}
-                    >
-                        <div className="day-card-content">
-                            <div className="day-number" style={{ fontSize: '1.2rem' }}>Try Lesson</div>
-                        </div>
-                    </div>
-                </div>
+
 
                 <div className="days-grid">
                     {days.map((day) => {
